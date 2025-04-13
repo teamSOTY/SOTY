@@ -1,7 +1,8 @@
 import React from 'react';
 import Navbar from './components/navbar/Navbar'; // adjust path if needed
 import PlaceholderImg from '../assets/Ellipse 2.png'
-import CatImage from '../assets/cat.jpeg'
+
+import FirstImg from '../assets/firstImg.jpg'
 import HeroImg from '../assets/heroImage.jpg'
 import HeroImage from '../assets/heroImage.webp'
 
@@ -24,7 +25,7 @@ const Home = () => {
       {/* Hero Section */}
       <section
   className="relative w-full min-h-[90vh] flex items-center bg-center bg-cover"
-  style={{ backgroundImage: `url(${HeroImg})` }}
+  style={{ backgroundImage: `url(${FirstImg})` }}
 >
   {/* Overlay for readability */}
   <div className="absolute inset-0  bg-opacity-30"></div>
@@ -45,9 +46,6 @@ const Home = () => {
     </div>
   </div>
 </section>
-
-
-
 
       {/* Features Section */}
       <section className="bg-gray-50 py-16">
