@@ -150,10 +150,18 @@ setTimeout(() => setNextButtonDisabled(false), 15000);
           className="w-[48%] bg-[#09a375] text-white py-2 rounded-md font-semibold hover:bg-[#088a64]">
           Previous
         </button>
-        <button type="button" onClick={handleRegister}
-          className="w-[48%] bg-[#09a375] text-white py-2 rounded-md font-semibold hover:bg-[#088a64]">
-          Register Now
-        </button>
+        <button
+  type="button"
+  onClick={handleRegister}
+  disabled={nextButtonDisabled}
+  className={`py-2 px-4 rounded-md text-white transition-all duration-200 ${
+    nextButtonDisabled
+      ? 'bg-emerald-300 cursor-not-allowed'
+      : 'bg-emerald-500 hover:bg-emerald-600'
+  }`}
+>
+  {nextButtonDisabled ? 'Please wait...' : 'Register'}
+</button>
       </div>
     </form>
   );
