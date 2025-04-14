@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Navbar from '../../components/navbar/Navbar';
 import Footer from '../../components/footer/Footer';
 import axios from 'axios';
@@ -20,29 +20,29 @@ const StudentRegister = () => {
   const [otpExpiryTimer, setOtpExpiryTimer] = useState(300);
   const [photo, setPhoto] = useState(null); // State for photo upload
 
+  const [phone, setPhone] = useState("");  // Phone number state
+  const [classValue, setClassValue] = useState("");
+  const [lastClassPercentage, setLastClassPercentage] = useState("");
+  const [schoolName, setSchoolName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [fatherName, setFatherName] = useState("");
+  const [motherName, setMotherName] = useState("");
+  const [guardianMobile, setGuardianMobile] = useState("");
+  const [contactNo, setContactNo] = useState("");
+  const [dob, setDob] = useState("");
+  const [gender, setGender] = useState("");
+  const [houseNumber, setHouseNumber] = useState("");
+  const [area, setArea] = useState("");
+  const [landmark, setLandmark] = useState("");
+  const [zipCode, setZipCode] = useState("");
+
   const navigate = useNavigate();
 
   const otpIntervalRef = useRef(null);
   const otpExpiryRef = useRef(null);
-
-  const verifyPhoneRef = useRef();
-  const classRef = useRef();
-  const lastClassPercentageRef = useRef();
-  const schoolNameRef = useRef();
-  const firstNameRef = useRef();
-  const lastNameRef = useRef();
-  const emailRef = useRef();
-  const passwordRef = useRef();
-  const fatherNameRef = useRef();
-  const motherNameRef = useRef();
-  const guardianMobileRef = useRef();
-  const contactNoRef = useRef();
-  const dobRef = useRef();
-  const genderRef = useRef();
-  const houseNumberRef = useRef();
-  const areaRef = useRef();
-  const landmarkRef = useRef();
-  const zipCodeRef = useRef();
 
   const setupRecaptcha = () => {
     if (!window.recaptchaVerifier) {
@@ -59,7 +59,6 @@ const StudentRegister = () => {
   };
 
   const sendOtpToPhone = async () => {
-    const phone = verifyPhoneRef.current.value;
     if (!phone) return alert("Please enter a phone number");
 
     setupRecaptcha();
@@ -100,7 +99,7 @@ const StudentRegister = () => {
       setOtpStatus("Enter the OTP first ❗");
       return;
     }
-  
+
     try {
       await confirmationResult.confirm(phoneOtp);
       setIsPhoneVerified(true);
@@ -109,9 +108,9 @@ const StudentRegister = () => {
     } catch (err) {
       setOtpStatus("Invalid OTP ❌");
       console.error("OTP verification error:", err);
-    }
+ }
   };
-  
+
   useEffect(() => {
     return () => {
       clearInterval(otpIntervalRef.current);
@@ -121,72 +120,59 @@ const StudentRegister = () => {
 
   const handleNext = async () => {
     if (currentStep === 1 && isPhoneVerified) {
-      console.log("Phone Ref Value:", verifyPhoneRef.current?.value);
-  
-      setCurrentStep(2); // Move to the next step after phone verification
+      setCurrentStep(2);
     } else if (currentStep === 2) {
-      console.log("Class Ref Value before:", classRef.current?.value);
- const instituteData = {
-        class: classRef.current?.value || "",
-        lastClassPercentage: lastClassPercentageRef.current?.value || "",
-        schoolName: schoolNameRef.current?.value || "",
+      const instituteData = {
+        class: classValue,
+        lastClassPercentage,
+        schoolName,
       };
-      console.log("Class Value Going to Backend:", classRef.current?.value);
-
       console.log('Institute data:', instituteData);
       setCurrentStep(3);
-  
     } else if (currentStep === 3) {
       const personalData = {
-        firstName: firstNameRef.current?.value || "",
-        lastName: lastNameRef.current?.value || "",
-        email: emailRef.current?.value || "",
-        password: passwordRef.current?.value || "",
-        fatherName: fatherNameRef.current?.value || "",
-        motherName: motherNameRef.current?.value || "",
-        guardianMobile: guardianMobileRef.current?.value || "",
-        contactNo: contactNoRef.current?.value || "",
-        dob: dobRef.current?.value || "",
-        gender: genderRef.current?.value || "",
-        houseNumber: houseNumberRef.current?.value || "",
-        area: areaRef.current?.value || "",
-        landmark: landmarkRef.current?.value || "",
-        zipCode: zipCodeRef.current?.value || "",
+        firstName,
+        lastName,
+        email,
+        password,
+        fatherName,
+        motherName,
+        guardianMobile,
+        contactNo,
+        dob,
+        gender,
+        houseNumber,
+        area,
+        landmark,
+        zipCode,
       };
-  
+
       try {
-        const { email, password } = personalData;
-  
-        // Create Firebase user
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        const firebaseUser   = userCredential.user;
-  
-        // Combine all collected data
+        const firebaseUser  = userCredential.user;
+
         const studentData = {
           ...personalData,
-          firebaseUid: firebaseUser .uid, // Correct field name
-          phone: verifyPhoneRef.current?.value || "", // from Step 1
-          class: classRef.current?.value || "",
-          lastClassPercentage: lastClassPercentageRef.current?.value || "",
-          schoolName: schoolNameRef.current?.value || "",
+          firebaseUid: firebaseUser .uid,
+          phone,
+          class: classValue,
+          lastClassPercentage,
+          schoolName,
         };
-  
-        // Remove password before sending to backend
+
         delete studentData.password;
 
-        // Handle photo upload to Cloudinary
         if (photo) {
           const formData = new FormData();
           formData.append('file', photo);
-          formData.append('upload_preset', 'your_upload_preset'); // Replace with your Cloudinary upload preset
+          formData.append('upload_preset', 'your_upload_preset');
 
-          const uploadResponse = await axios.post('https://api.cloudinary.com/v1_1/your_cloud_name/image/upload', formData);
-          studentData.profilePicture = uploadResponse.data.secure_url; // Store the URL in the student data
+          const uploadResponse = await axios.post('https://api.cloudinary.com/v1_1/dh7vksh4l/image/upload', formData);
+          studentData.profilePicture = uploadResponse.data.secure_url;
         }
 
-        // Send to backend
-        const response = await axios.post("/api/students", studentData);
-  
+        const response = await axios.post("http://localhost:5001/api/students", studentData);
+
         if (response.data.success) {
           console.log("User  registered and saved successfully.");
           setCurrentStep(4);
@@ -194,49 +180,42 @@ const StudentRegister = () => {
           console.error("Server Error:", response.data.message);
           alert("Failed to save data on server.");
         }
-  
       } catch (error) {
         console.error("Firebase Auth Error:", error.message);
         alert("Error creating user: " + error.message);
       }
     }
   };
-  
+
   const handlePrevious = () => {
     if (currentStep > 1) setCurrentStep(currentStep - 1);
   };
 
   const renderVerificationStep = () => (
-    <form
-      className="space-y-6"
-      onSubmit={(e) => {
-        e.preventDefault();
-        if (isPhoneVerified) handleNext(); // ensure next button manually works
-      }}
-    >
+    <form className="space-y-6" onSubmit={(e) => {
+      e.preventDefault();
+      if (isPhoneVerified) handleNext();
+    }}>
       <div>
         <label className="block mb-2">Phone Number मोबाइल नंबर</label>
         <input
           type="tel"
-          ref={verifyPhoneRef}
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
           placeholder="Phone Number"
           className="w-full px-3 py-2 border rounded-md"
           disabled={isPhoneVerified}
         />
-  
         {!isPhoneVerified && (
           <button
             type="button"
             onClick={sendOtpToPhone}
             disabled={otpTimer > 0}
-            className={`mt-2 ${
-              otpTimer > 0 ? "bg-gray-400" : "bg-gradient-to-br from-green-400 to-black hover:bg-green-900"
-            } text-white py-1 px-4 rounded-md`}
+            className={`mt-2 ${otpTimer > 0 ? "bg-gray-400" : "bg-gradient-to-br from-green-400 to-black hover:bg-green-900"} text-white py-1 px-4 rounded-md`}
           >
             {otpTimer > 0 ? `Resend OTP in ${otpTimer}s` : "Send OTP"}
           </button>
         )}
-  
         {showPhoneOTP && !isPhoneVerified && (
           <>
             <input
@@ -255,22 +234,17 @@ const StudentRegister = () => {
             </button>
           </>
         )}
-  
         {otpStatus && (
           <p className={`text-sm mt-2 ${otpStatus.includes("❌") ? "text-red-500" : "text-green-600"}`}>
             {otpStatus}
           </p>
         )}
-  
         <div id="recaptcha-container"></div>
       </div>
-  
       <button
         type="button"
         onClick={handleNext}
-        className={`w-full bg-emerald-500 text-white py-2 px-4 rounded-md ${
-          !isPhoneVerified ? "opacity-50 cursor-not-allowed" : ""
-        }`}
+        className={`w-full bg-emerald-500 text-white py-2 px-4 rounded-md ${!isPhoneVerified ? "opacity-50 cursor-not-allowed" : ""}`}
         disabled={!isPhoneVerified}
       >
         Next
@@ -281,10 +255,11 @@ const StudentRegister = () => {
   const renderInstituteDetailsForm = () => (
     <form className="space-y-6">
       <div>
-        <label className="block mb-2">Class कक्षा</label>
+        <label className="block mb-2">Class कक्षा </label>
         <input
           type="number"
-          ref={classRef}
+          value={classValue}
+          onChange={(e) => setClassValue(e.target.value)}
           placeholder="Class"
           className="w-full px-3 py-2 border rounded-md"
           min={9}
@@ -292,29 +267,31 @@ const StudentRegister = () => {
           required
         />
       </div>
-  
+
       <div>
         <label className="block mb-2">Last Class Percentage पिछली कक्षा का प्रतिशत</label>
         <input
           type="text"
-          ref={lastClassPercentageRef}
+          value={lastClassPercentage}
+          onChange={(e) => setLastClassPercentage(e.target.value)}
           placeholder="Percentage"
           className="w-full px-3 py-2 border rounded-md"
           required
         />
       </div>
-  
+
       <div>
         <label className="block mb-2">School Name स्कूल का नाम</label>
         <input
           type="text"
-          ref={schoolNameRef}
-          placeholder="School"
+          value={schoolName}
+          onChange={(e) => setSchoolName(e.target.value)}
+          placeholder="School Name"
           className="w-full px-3 py-2 border rounded-md"
           required
         />
       </div>
-  
+
       <div className="grid grid-cols-2 gap-4">
         <button type="button" onClick={handlePrevious} className="bg-gray-300 py-2 rounded-md">
           Previous
@@ -329,36 +306,127 @@ const StudentRegister = () => {
   const renderPersonalDetailsForm = () => (
     <form className="space-y-4">
       <div className="grid grid-cols-2 gap-4">
-        <input type="text" ref={firstNameRef} placeholder="First Name" className="border px-3 py-2 rounded-md" />
-        <input type="text" ref={lastNameRef} placeholder="Last Name" className="border px-3 py-2 rounded-md" />
+        <input
+          type="text"
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
+          placeholder="First Name"
+          className="border px-3 py-2 rounded-md"
+          required
+        />
+        <input
+          type="text"
+          value={lastName}
+          onChange={(e) => setLastName(e.target.value)}
+          placeholder="Last Name"
+          className="border px-3 py-2 rounded-md"
+          required
+        />
       </div>
       <div className="grid grid-cols-2 gap-4">
-        <input type="email" ref={emailRef} placeholder="Email" className="border px-3 py-2 rounded-md" />
-        <input type="password" ref={passwordRef} placeholder="Password" className="border px-3 py-2 rounded-md" />
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Email"
+          className="border px-3 py-2 rounded-md"
+          required
+        />
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Password"
+          className="border px-3 py-2 rounded-md"
+          required
+        />
       </div>
       <div className="grid grid-cols-2 gap-4">
-        <input type="text" ref={fatherNameRef} placeholder="Father's Name" className="border px-3 py-2 rounded-md" />
-        <input type="text" ref={motherNameRef} placeholder="Mother's Name" className="border px-3 py-2 rounded-md" />
+        <input
+          type="text"
+          value={fatherName}
+          onChange={(e) => setFatherName(e.target.value)}
+          placeholder="Father's Name"
+          className="border px-3 py-2 rounded-md"
+          required
+        />
+        <input
+          type="text"
+          value={motherName}
+          onChange={(e) => setMotherName(e.target.value)}
+          placeholder="Mother's Name"
+          className="border px-3 py-2 rounded-md"
+          required
+        />
       </div>
       <div className="grid grid-cols-2 gap-4">
-        <input type="tel" ref={guardianMobileRef} placeholder="Guardian Mobile" className="border px-3 py-2 rounded-md" />
-        <input type="tel" ref={contactNoRef} placeholder="Contact No" className="border px-3 py-2 rounded-md" />
+        <input
+          type="tel"
+          value={guardianMobile}
+          onChange={(e) => setGuardianMobile(e.target.value)}
+          placeholder="Guardian Mobile"
+          className="border px-3 py-2 rounded-md"
+        />
+        <input
+          type="tel"
+          value={contactNo}
+          onChange={(e) => setContactNo(e.target.value)}
+          placeholder="Contact No"
+          className="border px-3 py-2 rounded-md"
+          required
+        />
       </div>
       <div className="grid grid-cols-2 gap-4">
-        <input type="date" ref={dobRef} className="border px-3 py-2 rounded-md" />
-        <select ref={genderRef} className="border px-3 py-2 rounded-md">
-          <option value="male">Male</option>
-          <option value="female">Female</option>
-          <option value="other">Other</option>
+        <input
+          type="date"
+          value={dob}
+          onChange={(e) => setDob(e.target.value)}
+          className="border px-3 py-2 rounded-md"
+          required
+        />
+        <select
+          value={gender}
+          onChange={(e) => setGender(e.target.value)}
+          className="border px-3 py-2 rounded-md"
+          required
+        >
+          <option value="">Select Gender</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Other">Other</option>
         </select>
       </div>
       <div className="grid grid-cols-2 gap-4">
-        <input type="text" ref={houseNumberRef} placeholder="House Number" className="border px-3 py-2 rounded-md" />
-        <input type="text" ref={areaRef} placeholder="Area" className="border px-3 py-2 rounded-md" />
+        <input
+          type="text"
+          value={houseNumber}
+          onChange={(e) => setHouseNumber(e.target.value)}
+          placeholder="House Number"
+          className="border px-3 py-2 rounded-md"
+        />
+        <input
+          type="text"
+          value={area}
+          onChange={(e) => setArea(e.target.value)}
+          placeholder="Area"
+          className="border px-3 py-2 rounded-md"
+        />
       </div>
       <div className="grid grid-cols-2 gap-4">
-        <input type="text" ref={landmarkRef} placeholder="Landmark" className="border px-3 py-2 rounded-md" />
-        <input type="text" ref={zipCodeRef} placeholder="Zip Code" className="border px-3 py-2 rounded-md" />
+        <input
+          type="text"
+          value={landmark}
+          onChange={(e) => setLandmark(e.target.value)}
+          placeholder="Landmark"
+          className="border px-3 py-2 rounded-md"
+        />
+        <input
+          type="text"
+          value={zipCode}
+          onChange={(e) => setZipCode(e.target.value)}
+          placeholder="Zip Code"
+          className="border px-3 py-2 rounded-md"
+        />
       </div>
       <div className="grid grid-cols-2 gap-4 mt-4">
         <button type="button" onClick={handlePrevious} className="bg-gray-300 py-2 rounded-md">Previous</button>
