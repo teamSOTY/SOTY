@@ -4,6 +4,7 @@ import Navbar from "../../components/navbar/Navbar";
 import Footer from "../../components/footer/Footer";
 
 const InstituteRegister = () => {
+   const [nextButtonDisabled, setNextButtonDisabled] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
   const navigate = useNavigate();
 
@@ -22,6 +23,28 @@ const InstituteRegister = () => {
   const [studentCount, setStudentCount] = useState("");
 
   const handleRegister = async () => {
+    if (nextButtonDisabled) return;
+    setNextButtonDisabled(true);
+setTimeout(() => setNextButtonDisabled(false), 15000);
+
+
+    // Validation
+    if (
+      !instituteName ||
+      !instituteAddress ||
+      !email ||
+      !contact ||
+      !ownerFirstName ||
+      !ownerLastName ||
+      !ownerEmail ||
+      !password ||
+      !phoneNumber ||
+      !studentCount
+    ) {
+      alert("Please fill out all required fields before submitting!");
+      return;
+    }
+
     const instituteData = {
       instituteName,
       instituteAddress,

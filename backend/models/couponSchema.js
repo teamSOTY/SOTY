@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 
 const couponSchema = new mongoose.Schema({
-  code: { type: String, required: true, unique: true, trim: true },
-  discount: { type: Number, required: true },
-  expiry: { type: Date, required: true },
+  code: { type: String,  },
+  discount: { type: Number,  },
+  expiry: { type: Date },
   usedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Student' }],
   createdAt: { type: Date, default: Date.now }
 });
