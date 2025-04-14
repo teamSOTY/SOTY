@@ -12,7 +12,7 @@ const InstituteDashboard = () => {
   // Fetch all coupon usage
   const fetchCouponUsage = async () => {
     try {
-      const res = await fetch('http://localhost:5001/api/tracking');
+      const res = await fetch('https://soty-backend.onrender.com/api/tracking');
       const data = await res.json();
       setCouponUsage(data.coupons);
     } catch (err) {
@@ -35,7 +35,7 @@ const InstituteDashboard = () => {
       return alert('Fill all fields');
 
     try {
-      const res = await fetch('http://localhost:5001/api/coupon', {
+      const res = await fetch('https://soty-backend.onrender.com/api/coupon', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

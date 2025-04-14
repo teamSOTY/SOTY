@@ -38,7 +38,7 @@ const InstituteRegister = () => {
     };
 
     try {
-      const response = await fetch("http://localhost:5001/api/institute", {
+      const response = await fetch("https://soty-backend.onrender.com/api/institute", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
