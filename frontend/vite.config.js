@@ -7,4 +7,9 @@ export default defineConfig({
   plugins: [react(),
     tailwindcss()
   ],
+  base: '/', // Explicit base path (important for routing)
+  build: {
+    outDir: 'dist', // Ensure this matches Vercel's output directory
+    sourcemap: true // Optional for debugging
+  }
 })

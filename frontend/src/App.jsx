@@ -28,7 +28,7 @@ const App = () => {
       <Route path="/studentDashboard" element={<StudentDashboard />} />
 
       <Route path="/instituteDashboard" element={<InstituteDashboard />} />
-
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 };

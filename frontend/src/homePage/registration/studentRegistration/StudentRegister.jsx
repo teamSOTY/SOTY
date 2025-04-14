@@ -134,6 +134,16 @@ const StudentRegister = () => {
       console.log('Institute data:', instituteData);
       setCurrentStep(3);
     } else if (currentStep === 3) {
+        // Validate required fields before proceeding
+  // Validation for required personal fields
+  if (
+    !firstName || !lastName || !email || !password ||
+    !fatherName || !motherName || !guardianMobile || !contactNo ||
+    !dob || !gender ||
+    !houseNumber || !area || !landmark || !zipCode
+  ) {
+    return alert("Please fill out all required personal details before submitting!");
+  }
       setNextButtonDisabled(true);
       setTimeout(() => setNextButtonDisabled(false), 15000);
       const personalData = {
@@ -159,7 +169,7 @@ const StudentRegister = () => {
 
         const studentData = {
           ...personalData,
-          firebaseUid: firebaseUser .uid,
+          firebaseUid: firebaseUser.uid,
           phone,
           class: classValue,
           lastClassPercentage,
@@ -211,6 +221,7 @@ const StudentRegister = () => {
           placeholder="Phone Number"
           className="w-full px-3 py-2 border rounded-md"
           disabled={isPhoneVerified}
+          required
         />
         {!isPhoneVerified && (
           <button
