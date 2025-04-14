@@ -1,35 +1,53 @@
 const express = require("express");
 const crypto = require("crypto");
 const razorpay = require("../payment/razorpayInstance");
+const Student = require("../models/studentSchema")
+const Coupon = require("../models/couponSchema")
 
 const router = express.Router();
 
 // ------------------ Coupon Store ------------------
-const coupons = {
-  RANKINGEEK10: { discount: 10, expires: "2026-01-01" },
-  DISCOUNT50: { discount: 50, expires: "2025-12-31" },
-  SID50: { discount: 50, expires: "2025-12-31" },
+const staticCoupons = {
+  RANKINGEEK50: { discount: 50, expiry: "2026-01-01" },
+  SID50: { discount: 50, expiry: "2025-12-31" },// 🧪 Hardcoded test coupon
 };
 
 // ------------------ Prepare Payment (Secure Amount Calculation) ------------------
-router.post("/prepare-payment", (req, res) => {
-  const { coupon } = req.body;
-
-  const baseAmount = 199; // Could also be fetched from DB or based on product ID
+router.post("/prepare-payment", async (req, res) => {
+  const { coupon, studentId } = req.body;
+  const baseAmount = 199;
   let finalAmount = baseAmount;
 
-  const found = coupons[coupon];
-  if (found) {
+  try {
     const today = new Date();
-    const expiry = new Date(found.expires);
-    if (today <= expiry) {
-      finalAmount -= found.discount;
+
+    // 1. Check Static Coupon Store First
+    if (coupon && staticCoupons[coupon]) {
+      const staticData = staticCoupons[coupon];
+      if (today <= new Date(staticData.expiry)) {
+        finalAmount -= staticData.discount;
+      }
+      return res.json({ success: true, amount: finalAmount, note: "Static coupon used" });
     }
+
+    // 2. Fallback to DB Coupon
+    const found = await Coupon.findOne({ code: coupon });
+    if (found && today <= new Date(found.expiry)) {
+      finalAmount -= found.discount;
+
+      // Add student to usedBy list if not already there
+      if (studentId && !found.usedBy.includes(studentId)) {
+        found.usedBy.push(studentId);
+        await found.save();
+      }
+    }
+
+    res.json({ success: true, amount: finalAmount });
+  } catch (err) {
+    console.error("Coupon error:", err);
+    res.status(500).json({ success: false, message: "Internal error applying coupon" });
   }
-
-  res.json({ success: true, amount: finalAmount });
 });
-
 // ------------------ Create Razorpay Order ------------------
 router.post("/create-order", async (req, res) => {
   const { amount, currency } = req.body;

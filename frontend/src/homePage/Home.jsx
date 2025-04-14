@@ -24,11 +24,16 @@ const Home = () => {
     <div>
       {/* Hero Section */}
       <section
-  className="relative w-full min-h-[90vh] flex items-center bg-center bg-cover"
-  style={{ backgroundImage: `url(${FirstImg})` }}
+  className="relative w-full min-h-[100vh] flex items-center justify-center bg-black"
+  style={{
+    backgroundImage: `url(${FirstImg})`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
+  }}
 >
-  {/* Overlay for readability */}
-  <div className="absolute inset-0  bg-opacity-30"></div>
+ {/* Dark Overlay */}
+ <div className="absolute inset-0  bg-opacity-60 z-0"></div>
 
   {/* Content */}
   <div className="relative z-10 max-w-7xl mx-auto px-4 py-16">
