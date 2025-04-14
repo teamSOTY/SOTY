@@ -8,6 +8,7 @@ import StudentRegister from './homePage/registration/studentRegistration/Student
 import InstituteRegister from './homePage/registration/instituteRegistration/InstituteRegister';
 import PaymentComponent from './homePage/registration/studentRegistration/PaymentComponent';
 import StudentDashboard from './dashboard/studentDashboard/StudentDashboard';
+import InstituteDashboard from './dashboard/instituteDashboard/InstituteDashboard';
 
 const App = () => {
   return (
@@ -25,6 +26,9 @@ const App = () => {
       {/* Payment & Dashboard */}
       <Route path="/payment" element={<PaymentComponent />} />
       <Route path="/studentDashboard" element={<StudentDashboard />} />
+
+      <Route path="/instituteDashboard" element={<InstituteDashboard />} />
+
     </Routes>
   );
 };

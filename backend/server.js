@@ -29,8 +29,10 @@ mongoose.connect(process.env.MONGO_URI)
 // Routes
 const paymentRoutes = require("./routes/paymentRoute");
 const studentRoutes = require("./routes/studentRoute")
+const instituteRoute = require("./routes/instituteRoute")
 app.use("/api/payment", paymentRoutes);
 app.use("/api/students",studentRoutes)
+app.use("/api/institute", instituteRoute)
 
 // Test Route
 app.get("/", (req, res) => {

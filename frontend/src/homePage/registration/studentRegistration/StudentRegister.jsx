@@ -171,7 +171,7 @@ const StudentRegister = () => {
           studentData.profilePicture = uploadResponse.data.secure_url;
         }
 
-        const response = await axios.post("https://soty-backend.onrender.com/api/students", studentData);
+        const response = await axios.post("http://localhost:5001/api/students", studentData);
 
         if (response.data.success) {
           console.log("User  registered and saved successfully.");
