@@ -135,7 +135,7 @@ const StudentRegister = () => {
       setCurrentStep(3);
     } else if (currentStep === 3) {
       setNextButtonDisabled(true);
-      setTimeout(() => setNextButtonDisabled(false), 5000);
+      setTimeout(() => setNextButtonDisabled(false), 15000);
       const personalData = {
         firstName,
         lastName,
