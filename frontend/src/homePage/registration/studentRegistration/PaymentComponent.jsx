@@ -82,7 +82,7 @@ const PaymentComponent = () => {
 
       // ✅ Razorpay Options
       const options = {
-        key: "YOUR_RAZORPAY_KEY_ID", // Replace with your Razorpay Key ID
+        key: "rzp_live_HvYgZPAU9zltEf", // Replace with your Razorpay Key ID
         amount: order.amount,
         currency: order.currency,
         name: "SOTY",
