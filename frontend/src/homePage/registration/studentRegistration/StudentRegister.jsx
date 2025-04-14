@@ -10,6 +10,8 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from 'react-router-dom';
 
 const StudentRegister = () => {
+  const [nextButtonDisabled, setNextButtonDisabled] = useState(false);
+
   const [currentStep, setCurrentStep] = useState(1);
   const [showPhoneOTP, setShowPhoneOTP] = useState(false);
   const [phoneOtp, setPhoneOtp] = useState("");
@@ -119,6 +121,8 @@ const StudentRegister = () => {
   }, []);
 
   const handleNext = async () => {
+    if (nextButtonDisabled) return;
+
     if (currentStep === 1 && isPhoneVerified) {
       setCurrentStep(2);
     } else if (currentStep === 2) {
@@ -130,6 +134,8 @@ const StudentRegister = () => {
       console.log('Institute data:', instituteData);
       setCurrentStep(3);
     } else if (currentStep === 3) {
+      setNextButtonDisabled(true);
+      setTimeout(() => setNextButtonDisabled(false), 5000);
       const personalData = {
         firstName,
         lastName,
@@ -430,7 +436,19 @@ const StudentRegister = () => {
       </div>
       <div className="grid grid-cols-2 gap-4 mt-4">
         <button type="button" onClick={handlePrevious} className="bg-gray-300 py-2 rounded-md">Previous</button>
-        <button type="button" onClick={handleNext} className="bg-emerald-500 text-white py-2 rounded-md">Next</button>
+        <button
+  type="button"
+  onClick={handleNext}
+  disabled={nextButtonDisabled}
+  className={`py-2 px-4 rounded-md text-white transition-all duration-200 ${
+    nextButtonDisabled
+      ? 'bg-emerald-300 cursor-not-allowed'
+      : 'bg-emerald-500 hover:bg-emerald-600'
+  }`}
+>
+  {nextButtonDisabled ? 'Please wait...' : 'Next'}
+</button>
+
       </div>
     </form>
   );
