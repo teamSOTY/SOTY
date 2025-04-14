@@ -1,6 +1,7 @@
 import React from 'react';
 import Navbar from './components/navbar/Navbar'; // adjust path if needed
 import PlaceholderImg from '../assets/Ellipse 2.png'
+import { useNavigate } from "react-router-dom";
 
 import FirstImg from '../assets/firstImg.jpg'
 import HeroImg from '../assets/heroImage.jpg'
@@ -17,6 +18,12 @@ import {
 } from '@heroicons/react/24/outline'
 
 const Home = () => {
+  const navigate = useNavigate();
+
+
+  const handleRegisterClick = () => {
+    navigate("/register/student");
+  };
   return (
     <>
     <Navbar></Navbar>
@@ -45,7 +52,7 @@ const Home = () => {
         Celebrating academic excellence and dedication, the <strong>Scholar of the Year 2025 for Class 10th</strong> is a symbol of inspiration. 
         This platform honors both achievements and the journey of growth, passion, and perseverance in learning.
       </p>
-      <button className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700">
+      <button onClick={handleRegisterClick} className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700">
         Register Now
       </button>
     </div>
