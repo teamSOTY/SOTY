@@ -106,7 +106,6 @@ const StudentRegister = () => {
       setIsPhoneVerified(true);
       setOtpStatus("Phone verified successfully ✅");
       clearTimeout(otpExpiryRef.current);
-      setCurrentStep(2); // Move to the next step
     } catch (err) {
       setOtpStatus("Invalid OTP ❌");
       console.error("OTP verification error:", err);
@@ -121,13 +120,19 @@ const StudentRegister = () => {
   }, []);
 
   const handleNext = async () => {
-    if (currentStep === 2) {
-      const instituteData = {
+    if (currentStep === 1 && isPhoneVerified) {
+      console.log("Phone Ref Value:", verifyPhoneRef.current?.value);
+  
+      setCurrentStep(2); // Move to the next step after phone verification
+    } else if (currentStep === 2) {
+      console.log("Class Ref Value before:", classRef.current?.value);
+ const instituteData = {
         class: classRef.current?.value || "",
         lastClassPercentage: lastClassPercentageRef.current?.value || "",
         schoolName: schoolNameRef.current?.value || "",
       };
-  
+      console.log("Class Value Going to Backend:", classRef.current?.value);
+
       console.log('Institute data:', instituteData);
       setCurrentStep(3);
   
@@ -154,7 +159,7 @@ const StudentRegister = () => {
   
         // Create Firebase user
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        const firebaseUser  = userCredential.user;
+        const firebaseUser   = userCredential.user;
   
         // Combine all collected data
         const studentData = {
@@ -225,7 +230,7 @@ const StudentRegister = () => {
             onClick={sendOtpToPhone}
             disabled={otpTimer > 0}
             className={`mt-2 ${
-              otpTimer > 0 ? "bg-gray-400" : "bg-blue-500 hover:bg-blue-600"
+              otpTimer > 0 ? "bg-gray-400" : "bg-gradient-to-br from-green-400 to-black hover:bg-green-900"
             } text-white py-1 px-4 rounded-md`}
           >
             {otpTimer > 0 ? `Resend OTP in ${otpTimer}s` : "Send OTP"}
@@ -252,7 +257,7 @@ const StudentRegister = () => {
         )}
   
         {otpStatus && (
-          <p className={`text-sm mt-2 ${otpStatus.includes("❌") ? "text-red-500" : "text-green -600"}`}>
+          <p className={`text-sm mt-2 ${otpStatus.includes("❌") ? "text-red-500" : "text-green-600"}`}>
             {otpStatus}
           </p>
         )}
@@ -261,7 +266,8 @@ const StudentRegister = () => {
       </div>
   
       <button
-        type="submit"
+        type="button"
+        onClick={handleNext}
         className={`w-full bg-emerald-500 text-white py-2 px-4 rounded-md ${
           !isPhoneVerified ? "opacity-50 cursor-not-allowed" : ""
         }`}
@@ -274,7 +280,6 @@ const StudentRegister = () => {
 
   const renderInstituteDetailsForm = () => (
     <form className="space-y-6">
-      {/* Class Field */}
       <div>
         <label className="block mb-2">Class कक्षा</label>
         <input
@@ -288,7 +293,6 @@ const StudentRegister = () => {
         />
       </div>
   
-      {/* Last Class Percentage */}
       <div>
         <label className="block mb-2">Last Class Percentage पिछली कक्षा का प्रतिशत</label>
         <input
@@ -300,7 +304,6 @@ const StudentRegister = () => {
         />
       </div>
   
-      {/* School Name */}
       <div>
         <label className="block mb-2">School Name स्कूल का नाम</label>
         <input
@@ -312,18 +315,16 @@ const StudentRegister = () => {
         />
       </div>
   
-      {/* Buttons */}
       <div className="grid grid-cols-2 gap-4">
         <button type="button" onClick={handlePrevious} className="bg-gray-300 py-2 rounded-md">
           Previous
         </button>
-        <button type="submit" onClick={handleNext} className="bg-emerald-500 text-white py-2 rounded-md">
+        <button type="button" onClick={handleNext} className="bg-emerald-500 text-white py-2 rounded-md">
           Next
         </button>
       </div>
     </form>
   );
-  
 
   const renderPersonalDetailsForm = () => (
     <form className="space-y-4">
@@ -363,7 +364,6 @@ const StudentRegister = () => {
         <button type="button" onClick={handlePrevious} className="bg-gray-300 py-2 rounded-md">Previous</button>
         <button type="button" onClick={handleNext} className="bg-emerald-500 text-white py-2 rounded-md">Next</button>
       </div>
-
     </form>
   );
 
@@ -432,7 +432,7 @@ const StudentRegister = () => {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen bg-[#09a375] flex items-center justify-center p-4">
+      <div className="min-h-screen bg-[#0aa375] flex items-center justify-center p-4">
         <div className="bg-white rounded-lg p-8 w-full max-w-3xl">
           <h1 className="text-2xl font-semibold text-center mb-8">Student Registration</h1>
           <div className="flex justify-between mb-8">
@@ -442,7 +442,7 @@ const StudentRegister = () => {
                   {step}
                 </div>
                 <span className={`ml-2 ${currentStep === step ? 'text-emerald-500' : 'text-gray-400'}`}>
-                  {step === 1 ? 'Verify Phone' : step === 2 ? 'Institute Details' : step === 3 ? 'Personal Details' : 'Documents'}
+                  {step === 1 ? 'Verify Phone ' : step === 2 ? 'Institute Details' : step === 3 ? 'Personal Details' : 'Documents'}
                 </span>
               </div>
             ))}

@@ -54,17 +54,8 @@ const Navbar = () => {
   </li>
   {/* Dropdown trigger */}
   <li className="relative group">
-            <div className="cursor-pointer">
-              <NavLink
-                to="/register"
-                className={({ isActive }) =>
-                  isActive
-                    ? 'text-emerald-600 font-semibold'
-                    : 'hover:text-emerald-500 transition-colors duration-300'
-                }
-              >
-                Registration
-              </NavLink>
+            <div className="cursor-pointer hover:text-emerald-500">
+               Registration
             </div>
 
             {/* Dropdown */}
