@@ -52,21 +52,40 @@ const Navbar = () => {
       Contact
     </NavLink>
   </li>
+  {/* Dropdown trigger */}
   <li className="relative group">
-    <NavLink
-      to="/register"
-      className={({ isActive }) =>
-        isActive ? 'text-emerald-600 font-semibold' : 'hover:text-emerald-500 transition-colors duration-300'
-      }
-    >
-      Registration
-    </NavLink>
-  </li>
-</ul>
+            <div className="cursor-pointer">
+              <NavLink
+                to="/register"
+                className={({ isActive }) =>
+                  isActive
+                    ? 'text-emerald-600 font-semibold'
+                    : 'hover:text-emerald-500 transition-colors duration-300'
+                }
+              >
+                Registration
+              </NavLink>
+            </div>
 
+            {/* Dropdown */}
+            <div className="absolute left-0 top-full mt-1 w-48 bg-white shadow-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+              <NavLink
+                to="/register/institute"
+                className="block px-4 py-2 text-sm text-gray-700 hover:bg-[#28d793] hover:text-white"
+              >
+                Institute Registration
+              </NavLink>
+              <NavLink
+                to="/register/student"
+                className="block px-4 py-2 text-sm text-gray-700 hover:bg-[#28d793] hover:text-white"
+              >
+                Student Registration
+              </NavLink>
+            </div>
+          </li>
+        </ul>
       </div>
     </nav>
   );
 };
-
 export default Navbar;

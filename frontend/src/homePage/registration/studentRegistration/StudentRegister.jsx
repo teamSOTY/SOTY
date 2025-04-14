@@ -274,24 +274,56 @@ const StudentRegister = () => {
 
   const renderInstituteDetailsForm = () => (
     <form className="space-y-6">
+      {/* Class Field */}
       <div>
         <label className="block mb-2">Class कक्षा</label>
-        <input type="text" ref={classRef} placeholder="Class" className="w-full px-3 py-2 border rounded-md" />
+        <input
+          type="number"
+          ref={classRef}
+          placeholder="Class"
+          className="w-full px-3 py-2 border rounded-md"
+          min={9}
+          max={12}
+          required
+        />
       </div>
+  
+      {/* Last Class Percentage */}
       <div>
         <label className="block mb-2">Last Class Percentage पिछली कक्षा का प्रतिशत</label>
-        <input type="text" ref={lastClassPercentageRef} placeholder="Percentage" className="w-full px-3 py-2 border rounded-md" />
+        <input
+          type="text"
+          ref={lastClassPercentageRef}
+          placeholder="Percentage"
+          className="w-full px-3 py-2 border rounded-md"
+          required
+        />
       </div>
+  
+      {/* School Name */}
       <div>
         <label className="block mb-2">School Name स्कूल का नाम</label>
-        <input type="text" ref={schoolNameRef} placeholder="School" className="w-full px-3 py-2 border rounded-md" />
+        <input
+          type="text"
+          ref={schoolNameRef}
+          placeholder="School"
+          className="w-full px-3 py-2 border rounded-md"
+          required
+        />
       </div>
+  
+      {/* Buttons */}
       <div className="grid grid-cols-2 gap-4">
-        <button type="button" onClick={handlePrevious} className="bg-gray-300 py-2 rounded-md">Previous</button>
-        <button type="button" onClick={handleNext} className="bg-emerald-500 text-white py-2 rounded-md">Next</button>
+        <button type="button" onClick={handlePrevious} className="bg-gray-300 py-2 rounded-md">
+          Previous
+        </button>
+        <button type="submit" onClick={handleNext} className="bg-emerald-500 text-white py-2 rounded-md">
+          Next
+        </button>
       </div>
     </form>
   );
+  
 
   const renderPersonalDetailsForm = () => (
     <form className="space-y-4">

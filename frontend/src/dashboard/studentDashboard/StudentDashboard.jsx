@@ -15,7 +15,7 @@ const StudentDashboard = () => {
       if (user) {
         try {
           // Fetch student data from your backend
-          const res = await fetch("https://soty-backend.onrender.com/api/student", {
+          const res = await fetch("http://localhost:5001/api/student", {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
