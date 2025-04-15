@@ -3,6 +3,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const path = require("path");
 const cors = require("cors");
+const fs = require("fs");
 const admin = require("firebase-admin");
 
 const dotenv = require("dotenv");
@@ -25,12 +26,20 @@ app.use(cors());
 app.use(express.json());
 
 
-// ✅ Parse JSON string from env variable
-const firebaseConfig = JSON.parse(process.env.FIREBASE_CONFIG_JSON);
+// Load Firebase credentials based on the environment
+let firebaseConfig;
+
+if (process.env.NODE_ENV === 'production') {
+  // In production, read from the secret file
+  firebaseConfig = JSON.parse(fs.readFileSync('/etc/secrets/firebase-service-account.json', 'utf8'));
+} else {
+  // In development, read from a local file
+  firebaseConfig = JSON.parse(fs.readFileSync(path.join(__dirname, 'C:\Users\sidsh\Downloads\team-soty-firebase-adminsdk-fbsvc-8786d5f2c2.json'), 'utf8'));
+}
 
 admin.initializeApp({
   credential: admin.credential.cert(firebaseConfig),
-});
+})
 
 
 // MongoDB Connection
