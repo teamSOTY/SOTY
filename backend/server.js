@@ -1,9 +1,10 @@
 // server.js
 const express = require("express");
 const mongoose = require("mongoose");
+const path = require("path");
 const cors = require("cors");
 const admin = require("firebase-admin");
-const serviceAccount = require("./team-soty-firebase-adminsdk-fbsvc-fd48d17d6e.json"); // update path if needed
+
 const dotenv = require("dotenv");
 
 // Load environment variables
@@ -24,10 +25,13 @@ app.use(cors());
 app.use(express.json());
 
 
-// Firebase Admin SDK init
+// ✅ Parse JSON string from env variable
+const firebaseConfig = JSON.parse(process.env.FIREBASE_CONFIG_JSON);
+
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
+  credential: admin.credential.cert(firebaseConfig),
 });
+
 
 // MongoDB Connection
 mongoose.connect(process.env.MONGO_URI)
