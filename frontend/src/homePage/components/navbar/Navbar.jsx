@@ -52,6 +52,16 @@ const Navbar = () => {
       Contact
     </NavLink>
   </li>
+  <li>
+    <NavLink
+      to="/studentLogin"
+      className={({ isActive }) =>
+        isActive ? 'text-emerald-600 font-semibold' : 'hover:text-emerald-500 transition-colors duration-300'
+      }
+    >
+      Login
+    </NavLink>
+  </li>
   {/* Dropdown trigger */}
   <li className="relative group">
             <div className="cursor-pointer hover:text-emerald-500">

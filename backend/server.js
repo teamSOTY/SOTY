@@ -2,6 +2,8 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const admin = require("firebase-admin");
+const serviceAccount = require("./team-soty-firebase-adminsdk-fbsvc-fd48d17d6e.json"); // update path if needed
 const dotenv = require("dotenv");
 
 // Load environment variables
@@ -20,6 +22,12 @@ const corsOptions = {
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+
+// Firebase Admin SDK init
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+});
 
 // MongoDB Connection
 mongoose.connect(process.env.MONGO_URI)

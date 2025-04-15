@@ -2,6 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const Student = require('../models/studentSchema');
+const verifyFirebaseToken = require("../middleware/verifyFirebaseToken");
 
 // Create new student
 router.post('/', async (req, res) => {
@@ -27,5 +28,24 @@ router.post('/', async (req, res) => {
     });
   }
 });
+
+// GET /api/student
+router.get("/login", verifyFirebaseToken, async (req, res) => {
+  try {
+    const uid = req.user.uid;
+
+    const student = await Student.findOne({ firebaseUid: uid });
+
+    if (!student) {
+      return res.status(404).json({ success: false, message: "Student not found" });
+    }
+
+    res.json({ success: true, student });
+  } catch (err) {
+    console.error("Error fetching student:", err);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+});
+
 
 module.exports = router;
