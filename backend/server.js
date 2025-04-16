@@ -16,7 +16,7 @@ const PORT = process.env.PORT || 5001;
 
 // CORS Options
 const corsOptions = {
-  origin: ["https://soty-jade.vercel.app/","http://localhost:5173/","https://soty-ten.vercel.app/"], // allow only your frontend
+  origin: ["https://soty-jade.vercel.app/","http://localhost:5173/","https://soty-ten.vercel.app/","https://app.scholaroftheyear.com/",process.env.FRONTEND_URL], // allow only your frontend
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true, // allow cookies if needed
 };
@@ -34,7 +34,8 @@ if (process.env.NODE_ENV === 'production') {
   firebaseConfig = JSON.parse(fs.readFileSync('/etc/secrets/firebase-service-account.json', 'utf8'));
 } else {
   // In development, read from a local file
-  firebaseConfig = JSON.parse(fs.readFileSync(path.join(__dirname, 'C:\Users\sidsh\Downloads\team-soty-firebase-adminsdk-fbsvc-8786d5f2c2.json'), 'utf8'));
+  const localFilePath = path.join('C:', 'Users', 'sidsh', 'Downloads', 'team-soty-firebase-adminsdk-fbsvc-8786d5f2c2.json');
+  firebaseConfig = JSON.parse(fs.readFileSync(localFilePath, 'utf8'));
 }
 
 admin.initializeApp({
