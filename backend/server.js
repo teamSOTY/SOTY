@@ -16,7 +16,7 @@ const PORT = process.env.PORT || 5001;
 
 // CORS Options
 const corsOptions = {
-  origin: ["https://soty-jade.vercel.app/","http://localhost:5173/","https://soty-ten.vercel.app/","https://app.scholaroftheyear.com/",process.env.FRONTEND_URL], // allow only your frontend
+  origin: ["https://soty-jade.vercel.app/","http://localhost:5173/","https://soty-ten.vercel.app/","https://app.scholaroftheyear.com/",process.env.FRONTEND_URL,"https://scholaroftheyear.com/"], // allow only your frontend
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true, // allow cookies if needed
 };
