@@ -3,6 +3,7 @@ import { ChevronDown, ChevronUp } from 'lucide-react';
 import Navbar from '../homePage/components/navbar/Navbar';
 import Footer from '../homePage/components/footer/Footer';
 import HeroImage from '../assets/heroImage.webp'
+import faqImg from '../assets/faq.jpg'
 
 const faqs = [
   { question: 'What are the features of SOTY Portal?', answer: 'Some placeholder answer for features.' },
@@ -29,7 +30,7 @@ const Faq = () => {
       <div className="max-w-3xl mx-auto">
       <div
   className="bg-center bg-no-repeat bg-cover h-44  mb-6 rounded-md"
-  style={{ backgroundImage: `url(${HeroImage})` }}
+  style={{ backgroundImage: `url(${faqImg})` }}
 />
 
 

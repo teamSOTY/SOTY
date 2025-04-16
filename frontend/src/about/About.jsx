@@ -2,6 +2,7 @@ import React from 'react';
 import Navbar from '../homePage/components/navbar/Navbar';
 import Footer from '../homePage/components/footer/Footer';
 import Gologo from '../assets/gologo.avif'
+import DifferImg from '../assets/difference.jpg'
 
 const About = () => {
   return (
@@ -10,7 +11,7 @@ const About = () => {
     <div className="w-full">
       {/* Hero Section */}
       <section className="bg-cover bg-center h-64 flex items-center justify-center text-white text-4xl font-bold shadow-md"
-        style={{ backgroundImage: "url('https://images.unsplash.com/photo-1516979187457-637abb4f9353?fit=crop&w=1400&q=80')" }}>
+        style={{ backgroundImage: `url(${DifferImg})` }}>
         About Us
       </section>
 
