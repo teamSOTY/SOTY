@@ -26,7 +26,7 @@ const InstituteDashboard = () => {
   const fetchCouponUsage = async (user) => {
     try {
       const token = user && (await user.getIdToken());
-      const res = await fetch('http://localhost:5001/api/tracking', {
+      const res = await fetch('https://soty-backend.onrender.com/api/tracking', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -45,26 +45,35 @@ const InstituteDashboard = () => {
   };
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    
+    // If the field is 'code', make it uppercase and remove spaces and special characters
+    let updatedValue = value;
+    if (name === 'code') {
+      updatedValue = updatedValue.toUpperCase().replace(/\s+/g, '').replace(/[^A-Z0-9]/g, '');
+    }
+  
+    setForm({ ...form, [name]: updatedValue });
   };
 
   const handleCreateCoupon = async (e) => {
     e.preventDefault();
     if (!form.code) return alert('Enter a coupon code');
+    const couponCode = form.code.toUpperCase().replace(/\s+/g, '').replace(/[^A-Z0-9]/g, '');
 
     try {
       const auth = getAuth();
       const user = auth.currentUser ;
       const token = user && (await user.getIdToken());
 
-      const res = await fetch('http://localhost:5001/api/coupon', {
+      const res = await fetch('https://soty-backend.onrender.com/api/coupon', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          code: form.code, // Only send the coupon code
+          code: couponCode, // Only send the coupon code
         }),
       });
 

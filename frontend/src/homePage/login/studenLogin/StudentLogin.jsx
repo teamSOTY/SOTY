@@ -24,7 +24,7 @@ const StudentLogin = () => {
       const idToken = await firebaseUser.getIdToken();
       
       // Send token to backend to fetch full student profile
-      const response = await fetch('http://localhost:5001/api/students/login', {
+      const response = await fetch('https://soty-backend.onrender.com/api/students/login', {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${idToken}`,
