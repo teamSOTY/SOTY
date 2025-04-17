@@ -1,13 +1,18 @@
 const express = require('express');
-const Coupon = require('../models/couponSchema'); // adjust path as needed
-const Student = require('../models/studentSchema'); // adjust path as needed
+const Coupon = require('../models/couponSchema');
+const Student = require('../models/studentSchema');
+const authenticateFirebaseUser = require('../middleware/verifyFirebaseToken'); // 👈 Middleware to verify Firebase token
 
 const router = express.Router();
 
-// GET /api/coupon-usage
-router.get('/', async (req, res) => {
+// GET /api/tracking - Only fetch coupons created by logged-in Firebase user
+router.get('/', authenticateFirebaseUser, async (req, res) => {
   try {
-    const coupons = await Coupon.find().populate('usedBy', 'name email'); // assuming "usedBy" is an array of ObjectIds pointing to students
+    const firebaseUID = req.user.uid;
+
+    const coupons = await Coupon.find({ createdBy: firebaseUID })
+      .populate('usedBy', 'name email');
+
     res.json({ coupons });
   } catch (err) {
     console.error('Error fetching coupon usage:', err);

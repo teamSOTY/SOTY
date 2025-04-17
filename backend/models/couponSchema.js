@@ -5,6 +5,7 @@ const couponSchema = new mongoose.Schema({
   discount: { type: Number,  },
   expiry: { type: Date },
   usedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Student' }],
+  createdBy: { type: String, required: true },
   createdAt: { type: Date, default: Date.now }
 });
 

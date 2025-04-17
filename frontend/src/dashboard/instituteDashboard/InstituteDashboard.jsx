@@ -1,18 +1,36 @@
 import React, { useState, useEffect } from 'react';
+import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
 
 const InstituteDashboard = () => {
   const [coupons, setCoupons] = useState([]);
   const [couponUsage, setCouponUsage] = useState([]);
-  const [form, setForm] = useState({
-    code: '',
-    discount: '',
-    expiry: '',
-  });
+  const [form, setForm] = useState({ code: '', discount: '', expiry: '' });
+  const navigate = useNavigate();
 
-  // Fetch all coupon usage
-  const fetchCouponUsage = async () => {
+  useEffect(() => {
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        // 🚫 If not logged in, redirect to homepage
+        navigate('/');
+      } else {
+        // ✅ If logged in, fetch coupons
+        fetchCouponUsage(user);
+      }
+    });
+
+    return () => unsubscribe();
+  }, [navigate]);
+
+  const fetchCouponUsage = async (user) => {
     try {
-      const res = await fetch('https://soty-backend.onrender.com/api/tracking');
+      const token = user && (await user.getIdToken());
+      const res = await fetch('https://soty-backend.onrender.com/api/tracking', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const data = await res.json();
       setCouponUsage(data.coupons);
     } catch (err) {
@@ -20,10 +38,11 @@ const InstituteDashboard = () => {
     }
   };
 
-  // Fetch on initial render
-  useEffect(() => {
-    fetchCouponUsage();
-  }, []);
+  const handleLogout = async () => {
+    const auth = getAuth();
+    await signOut(auth);
+    navigate('/'); // Redirect to homepage
+  };
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -35,10 +54,15 @@ const InstituteDashboard = () => {
       return alert('Fill all fields');
 
     try {
+      const auth = getAuth();
+      const user = auth.currentUser ;
+      const token = user && (await user.getIdToken());
+
       const res = await fetch('https://soty-backend.onrender.com/api/coupon', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(form),
       });
@@ -49,7 +73,7 @@ const InstituteDashboard = () => {
 
       setCoupons([...coupons, data.coupon]);
       setForm({ code: '', discount: '', expiry: '' });
-      fetchCouponUsage();
+      fetchCouponUsage(user);
     } catch (err) {
       console.error(err);
       alert('Error creating coupon');
@@ -58,7 +82,15 @@ const InstituteDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
-      <h1 className="text-3xl font-bold text-center mb-8">🎓 Institute Admin Dashboard</h1>
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold text-center">🎓 Institute Admin Dashboard</h1>
+        <button
+          onClick={handleLogout}
+          className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
+        >
+          Logout
+        </button>
+      </div>
 
       {/* Coupon Creation */}
       <div className="bg-white p-6 rounded-xl shadow-md max-w-xl mx-auto mb-10">
