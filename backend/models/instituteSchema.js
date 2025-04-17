@@ -16,6 +16,8 @@ const instituteSchema = new mongoose.Schema({
     phoneNumber: { type: String,  },
   },
   studentCount: { type: Number,  },
+  firebaseUid: { type: String },
+
 }, { timestamps: true });
 
 const Institute = mongoose.model("Institute", instituteSchema);

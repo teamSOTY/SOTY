@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Institute = require("../models/instituteSchema");
+const verifyFirebaseToken = require("../middleware/verifyFirebaseToken");
 
 router.post("/", async (req, res) => {
   try {
@@ -10,6 +11,7 @@ router.post("/", async (req, res) => {
       email,
       contact,
       owner,
+      firebaseUid,
       studentCount,
     } = req.body;
 
@@ -24,6 +26,7 @@ router.post("/", async (req, res) => {
       email,
       contact,
       owner,
+      firebaseUid,
       studentCount,
     });
 
@@ -37,26 +40,29 @@ router.post("/", async (req, res) => {
 
 
 // GET route to fetch the owner name of the institute
-router.get("/institute", async (req, res) => {
+router.get("/login", verifyFirebaseToken, async (req, res) => {
   try {
-    // Assuming you are passing the institute ID in the query parameters
-    const instituteId = req.query.instituteId;
+    const uid = req.user.uid;
 
-    if (!instituteId) {
-      return res.status(400).json({ message: "Institute ID is required." });
-    }
-
-    const institute = await Institute.findById(instituteId);
+    const institute = await Institute.findOne({ firebaseUid: uid });
 
     if (!institute) {
-      return res.status(404).json({ message: "Institute not found" });
+      return res.status(404).json({
+        success: false,
+        message: "Institute not found",
+      });
     }
 
-    // Send the owner name in the response
-    res.json({ ownerName: institute.owner });
+    res.json({
+      success: true,
+      institute,
+    });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error fetching institute details" });
+    console.error("Error fetching institute:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
   }
 });
 

@@ -3,6 +3,7 @@ import Home from './homePage/Home';
 import About from './about/About';
 import Faq from './faq/Faq';
 import Contact from './contact/Contact';
+import ScrollToTop from './ScrollToTop';
 
 import StudentRegister from './homePage/registration/studentRegistration/StudentRegister';
 import InstituteRegister from './homePage/registration/instituteRegistration/InstituteRegister';
@@ -10,9 +11,12 @@ import PaymentComponent from './homePage/registration/studentRegistration/Paymen
 import StudentDashboard from './dashboard/studentDashboard/StudentDashboard';
 import InstituteDashboard from './dashboard/instituteDashboard/InstituteDashboard';
 import StudentLogin from './homePage/login/studenLogin/StudentLogin';
+import InstituteLogin from './homePage/login/instituteLogin/InstituteLogin';
 
 const App = () => {
   return (
+  <>
+  <ScrollToTop/>
     <Routes>
       {/* Public Routes */}
       <Route path="/" element={<Home />} />
@@ -26,6 +30,7 @@ const App = () => {
 
       {/* login routes */}
       <Route path='/studentLogin' element={<StudentLogin></StudentLogin>}/>
+      <Route path='/instituteLogin' element={<InstituteLogin></InstituteLogin>}/>
 
       {/* Payment & Dashboard */}
       <Route path="/payment" element={<PaymentComponent />} />
@@ -36,6 +41,7 @@ const App = () => {
       <Route path="/instituteDashboard" element={<InstituteDashboard />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
+  </>
   );
 };
 

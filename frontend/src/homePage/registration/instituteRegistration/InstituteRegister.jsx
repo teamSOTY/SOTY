@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/navbar/Navbar";
 import Footer from "../../components/footer/Footer";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../Firebase";
 
 const InstituteRegister = () => {
    const [nextButtonDisabled, setNextButtonDisabled] = useState(false);
@@ -45,42 +47,56 @@ setTimeout(() => setNextButtonDisabled(false), 15000);
       return;
     }
 
+    
+  try {
+    // Create Firebase User
+    const userCredential = await createUserWithEmailAndPassword(auth, ownerEmail, password);
+    const firebaseUid = userCredential.user.uid;
+
+    // Prepare data with Firebase UID
     const instituteData = {
       instituteName,
       instituteAddress,
       email,
       contact,
-      role:"admin",
+      role: "admin",
       owner: {
         firstName: ownerFirstName,
         lastName: ownerLastName,
         email: ownerEmail,
         phoneNumber,
+       
       },
+      firebaseUid,
       studentCount,
     };
 
-    try {
-      const response = await fetch("https://soty-backend.onrender.com/api/institute", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(instituteData),
-      });
+    // Send data to your backend
+    const response = await fetch("https://soty-backend.onrender.com/api/institute", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(instituteData),
+    });
 
-      const data = await response.json();
-      if (response.ok) {
-        alert(data.message);
-        navigate("/instituteDashboard");
-      } else {
-        alert(data.message || "Registration failed");
-      }
-    } catch (error) {
-      console.error("Error registering:", error);
-      alert("Something went wrong.");
+    const data = await response.json();
+    if (response.ok) {
+      alert(data.message);
+      navigate("/instituteDashboard");
+    } else {
+      alert(data.message || "Registration failed");
     }
-  };
+
+  } catch (error) {
+    console.error("Error during registration:", error);
+    if (error.code === "auth/email-already-in-use") {
+      alert("Email is already in use.");
+    } else {
+      alert("Something went wrong during registration.");
+    }
+  }
+};
 
   const renderStep1 = () => (
     <form className="grid grid-cols-2 gap-4">

@@ -6,6 +6,7 @@ import LogoSoty from '../../../assets/logoSoty.png';
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isLoginDropdownOpen, setIsLoginDropdownOpen] = useState(false);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -13,6 +14,10 @@ const Navbar = () => {
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const toggleLoginDropdown = () => {
+    setIsLoginDropdownOpen(!isLoginDropdownOpen);
   };
 
   return (
@@ -83,22 +88,13 @@ const Navbar = () => {
                 Contact
               </NavLink>
             </li>
-            <li>
-              <NavLink
-                to="/studentLogin"
-                className={({ isActive }) =>
-                  isActive ? 'text-emerald-600 font-semibold' : 'hover:text-emerald-500 transition-colors duration-300'
-                }
-              >
-                Login
-              </NavLink>
-            </li>
-            {/* Dropdown trigger - Desktop */}
+
+            {/* Dropdown trigger - Desktop (Registration) */}
             <li className="relative group">
               <div className="cursor-pointer hover:text-emerald-500">
                 Registration
               </div>
-              {/* Dropdown - Desktop */}
+              {/* Dropdown - Desktop (Registration) */}
               <div className="absolute left-0 top-full mt-1 w-48 bg-white shadow-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
                 <NavLink
                   to="/register/institute"
@@ -111,6 +107,28 @@ const Navbar = () => {
                   className="block px-4 py-2 text-sm text-gray-700 hover:bg-[#28d793] hover:text-white"
                 >
                   Student Registration
+                </NavLink>
+              </div>
+            </li>
+
+            {/* Dropdown trigger - Desktop (Login) */}
+            <li className="relative group">
+              <div className="cursor-pointer hover:text-emerald-500">
+                Login
+              </div>
+              {/* Dropdown - Desktop (Login) */}
+              <div className="absolute left-0 top-full mt-1 w-48 bg-white shadow-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                <NavLink
+                  to="/instituteLogin"
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-[#28d793] hover:text-white"
+                >
+                  Institute Login
+                </NavLink>
+                <NavLink
+                  to="/studentLogin"
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-[#28d793] hover:text-white"
+                >
+                  Student Login
                 </NavLink>
               </div>
             </li>
@@ -168,18 +186,8 @@ const Navbar = () => {
                 Contact
               </NavLink>
             </li>
-            <li>
-              <NavLink
-                to="/studentLogin"
-                className={({ isActive }) =>
-                  isActive ? 'text-emerald-600 font-semibold block py-2' : 'hover:text-emerald-500 transition-colors duration-300 block py-2'
-                }
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Login
-              </NavLink>
-            </li>
-            {/* Dropdown trigger - Mobile */}
+
+            {/* Dropdown trigger - Mobile (Registration) */}
             <li>
               <button 
                 className="flex items-center justify-between w-full py-2 hover:text-emerald-500"
@@ -190,7 +198,7 @@ const Navbar = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
                 </svg>
               </button>
-              {/* Dropdown - Mobile */}
+              {/* Dropdown - Mobile (Registration) */}
               <div className={`pl-4 space-y-2 overflow-hidden transition-all duration-200 ${isDropdownOpen ? 'max-h-20 py-2' : 'max-h-0'}`}>
                 <NavLink
                   to="/register/institute"
@@ -205,6 +213,36 @@ const Navbar = () => {
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Student Registration
+                </NavLink>
+              </div>
+            </li>
+
+            {/* Dropdown trigger - Mobile (Login) */}
+            <li>
+              <button 
+                className="flex items-center justify-between w-full py-2 hover:text-emerald-500"
+                onClick={toggleLoginDropdown}
+              >
+                <span>Login</span>
+                <svg className={`w-4 h-4 transition-transform ${isLoginDropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+              </button>
+              {/* Dropdown - Mobile (Login) */}
+              <div className={`pl-4 space-y-2 overflow-hidden transition-all duration-200 ${isLoginDropdownOpen ? 'max-h-20 py-2' : 'max-h-0'}`}>
+                <NavLink
+                  to="/login/institute"
+                  className="block text-gray-700 hover:text-emerald-500"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Institute Login
+                </NavLink>
+                <NavLink
+                  to="/login/student"
+                  className="block text-gray-700 hover:text-emerald-500"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Student Login
                 </NavLink>
               </div>
             </li>
