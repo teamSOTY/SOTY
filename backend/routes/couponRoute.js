@@ -5,8 +5,9 @@ const router = express.Router();
 // POST /api/coupon - Create a coupon (with Firebase UID)
 router.post('/', async (req, res) => {
   try {
-    const { code, discount, expiry } = req.body;
+    const { code} = req.body;
     const firebaseUID = req.user?.uid;
+    if (!code) return res.status(400).json({ message: "Coupon code is required" });
 
     if (!firebaseUID) {
       return res.status(401).json({ message: 'Unauthorized: Firebase UID missing' });
@@ -16,11 +17,16 @@ router.post('/', async (req, res) => {
     if (existing) {
       return res.status(400).json({ message: 'Coupon code already exists' });
     }
+     // Set the discount and expiry date here
+     const discount = 50; // Fixed discount
+     const expiryDate = new Date();
+     expiryDate.setDate(expiryDate.getDate() + 4);
 
     const coupon = await Coupon.create({
       code,
       discount,
-      expiry,
+      expiry: expiryDate,
+      usedBy: [],
       createdBy: firebaseUID, // 👈 Store the UID here
     });
 

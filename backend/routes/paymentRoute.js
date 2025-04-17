@@ -8,8 +8,7 @@ const router = express.Router();
 
 // ------------------ Coupon Store ------------------
 const staticCoupons = {
-  RANKINGEEK50: { discount: 50, expiry: "2026-01-01" },
-  SID50: { discount: 50, expiry: "2025-12-31" },// 🧪 Hardcoded test coupon
+  SID50: { discount: 50, expiry: "2026-12-31" },// 🧪 Hardcoded test coupon
 };
 
 // ------------------ Prepare Payment (Secure Amount Calculation) ------------------
@@ -26,28 +25,42 @@ router.post("/prepare-payment", async (req, res) => {
       const staticData = staticCoupons[coupon];
       if (today <= new Date(staticData.expiry)) {
         finalAmount -= staticData.discount;
+        return res.json({ success: true, amount: finalAmount, note: "Static coupon used" });
       }
-      return res.json({ success: true, amount: finalAmount, note: "Static coupon used" });
     }
 
     // 2. Fallback to DB Coupon
     const found = await Coupon.findOne({ code: coupon });
     if (found && today <= new Date(found.expiry)) {
+      const alreadyUsed = found.usedBy.includes(studentId);
+
+      // If limit is reached and student is NOT already in the list — reject
+      if (found.usedBy.length >= 15 && !alreadyUsed) {
+        return res.status(400).json({
+          success: false,
+          message: "Coupon usage limit reached (only 15 students allowed)",
+        });
+      }
+
+      // Apply discount
       finalAmount -= found.discount;
 
       // Add student to usedBy list if not already there
-      if (studentId && !found.usedBy.includes(studentId)) {
+      if (studentId && !alreadyUsed) {
         found.usedBy.push(studentId);
         await found.save();
       }
+
+      return res.json({ success: true, amount: finalAmount, note: "DB coupon used" });
     }
 
-    res.json({ success: true, amount: finalAmount });
+    return res.status(400).json({ success: false, message: "Invalid or expired coupon" });
   } catch (err) {
     console.error("Coupon error:", err);
     res.status(500).json({ success: false, message: "Internal error applying coupon" });
   }
 });
+
 // ------------------ Create Razorpay Order ------------------
 router.post("/create-order", async (req, res) => {
   const { amount, currency } = req.body;

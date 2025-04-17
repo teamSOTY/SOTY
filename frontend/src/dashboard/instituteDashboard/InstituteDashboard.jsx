@@ -26,7 +26,7 @@ const InstituteDashboard = () => {
   const fetchCouponUsage = async (user) => {
     try {
       const token = user && (await user.getIdToken());
-      const res = await fetch('https://soty-backend.onrender.com/api/tracking', {
+      const res = await fetch('http://localhost:5001/api/tracking', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -50,21 +50,22 @@ const InstituteDashboard = () => {
 
   const handleCreateCoupon = async (e) => {
     e.preventDefault();
-    if (!form.code || !form.discount || !form.expiry)
-      return alert('Fill all fields');
+    if (!form.code) return alert('Enter a coupon code');
 
     try {
       const auth = getAuth();
       const user = auth.currentUser ;
       const token = user && (await user.getIdToken());
 
-      const res = await fetch('https://soty-backend.onrender.com/api/coupon', {
+      const res = await fetch('http://localhost:5001/api/coupon', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          code: form.code, // Only send the coupon code
+        }),
       });
 
       const data = await res.json();
@@ -72,7 +73,7 @@ const InstituteDashboard = () => {
       if (!res.ok) return alert(data.message || 'Failed to create coupon');
 
       setCoupons([...coupons, data.coupon]);
-      setForm({ code: '', discount: '', expiry: '' });
+      setForm({ code: '' });
       fetchCouponUsage(user);
     } catch (err) {
       console.error(err);
@@ -101,27 +102,14 @@ const InstituteDashboard = () => {
             name="code"
             value={form.code}
             onChange={handleChange}
-            className="w-full p-2 border rounded-md"
+            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Coupon Code (e.g. SAVE20)"
+            required
           />
-          <input
-            type="number"
-            name="discount"
-            value={form.discount}
-            onChange={handleChange}
-            className="w-full p-2 border rounded-md"
-            placeholder="Discount (%)"
-          />
-          <input
-            type="date"
-            name="expiry"
-            value={form.expiry}
-            onChange={handleChange}
-            className="w-full p-2 border rounded-md"
-          />
+          <p className="text-sm text-gray-600">Discount is fixed to ₹50 and is valid only for 4 days.</p>
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700"
+            className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition duration-200"
           >
             Create Coupon
           </button>
@@ -136,20 +124,23 @@ const InstituteDashboard = () => {
         ) : (
           <div className="space-y-6">
             {couponUsage.map((coupon) => (
-              <div
-                key={coupon._id}
-                className="border border-gray-200 p-4 rounded-lg shadow-sm"
+              <div key={coupon._id}
+                className="border border-gray-200 p-4 rounded-lg shadow-sm hover:shadow-md transition duration-200"
               >
                 <div className="flex justify-between items-center mb-2">
                   <div>
                     <p className="font-bold text-lg">{coupon.code}</p>
                     <p className="text-sm text-gray-500">
-                      Discount: {coupon.discount}% | Expires: {new Date(coupon.expiry).toLocaleDateString()}
+                      Discount: ₹{coupon.discount} | Expires: {new Date(coupon.expiry).toLocaleDateString()}
                     </p>
                   </div>
                   <span className="bg-gray-100 px-3 py-1 text-sm rounded-full">
-                    Used by {coupon.usedBy?.length || 0} students
+                    Used by {coupon.usedBy?.length || 0}/15 students
                   </span>
+                  {coupon.usedBy.length >= 15 && (
+        <p className="text-sm text-red-500 font-medium mt-1">⚠️ Usage limit reached</p>
+      )}
+
                 </div>
 
                 {coupon.usedBy && coupon.usedBy.length > 0 ? (
