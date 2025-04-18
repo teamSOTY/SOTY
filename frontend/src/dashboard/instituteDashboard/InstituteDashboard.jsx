@@ -44,51 +44,58 @@ const InstituteDashboard = () => {
     navigate('/'); // Redirect to homepage
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+  // const handleChange = (e) => {
+  //   const { name, value } = e.target;
     
-    // If the field is 'code', make it uppercase and remove spaces and special characters
-    let updatedValue = value;
-    if (name === 'code') {
-      updatedValue = updatedValue.toUpperCase().replace(/\s+/g, '').replace(/[^A-Z0-9]/g, '');
-    }
+  //   // If the field is 'code', make it uppercase and remove spaces and special characters
+  //   let updatedValue = value;
+  //   if (name === 'code') {
+  //     updatedValue = updatedValue.toUpperCase().replace(/\s+/g, '').replace(/[^A-Z0-9]/g, '');
+  //   }
   
-    setForm({ ...form, [name]: updatedValue });
+  //   setForm({ ...form, [name]: updatedValue });
+  // };
+
+  const generateRandomCode = () => {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let code = '';
+    for (let i = 0; i < 6; i++) {
+      code += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return code;
   };
-
-  const handleCreateCoupon = async (e) => {
-    e.preventDefault();
-    if (!form.code) return alert('Enter a coupon code');
-    const couponCode = form.code.toUpperCase().replace(/\s+/g, '').replace(/[^A-Z0-9]/g, '');
-
+  
+  const handleGenerateCoupon = async () => {
+    const code = generateRandomCode();
+  
     try {
       const auth = getAuth();
-      const user = auth.currentUser ;
+      const user = auth.currentUser;
       const token = user && (await user.getIdToken());
-
+  
       const res = await fetch('https://soty-backend.onrender.com/api/coupon', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          code: couponCode, // Only send the coupon code
-        }),
+        body: JSON.stringify({ code }),
       });
-
+  
       const data = await res.json();
-
+  
       if (!res.ok) return alert(data.message || 'Failed to create coupon');
-
+  
       setCoupons([...coupons, data.coupon]);
-      setForm({ code: '' });
       fetchCouponUsage(user);
+      alert(`🎉 Coupon "${code}" created successfully!`);
     } catch (err) {
       console.error(err);
       alert('Error creating coupon');
     }
   };
+  
+
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
@@ -103,27 +110,18 @@ const InstituteDashboard = () => {
       </div>
 
       {/* Coupon Creation */}
-      <div className="bg-white p-6 rounded-xl shadow-md max-w-xl mx-auto mb-10">
-        <h2 className="text-xl font-semibold mb-4 text-blue-600">Create a Coupon</h2>
-        <form onSubmit={handleCreateCoupon} className="space-y-4">
-          <input
-            type="text"
-            name="code"
-            value={form.code}
-            onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Coupon Code (e.g. SAVE20)"
-            required
-          />
-          <p className="text-sm text-gray-600">Discount is fixed to ₹50 and is valid only for 4 days.</p>
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition duration-200"
-          >
-            Create Coupon
-          </button>
-        </form>
-      </div>
+      {/* Coupon Creation */}
+<div className="bg-white p-6 rounded-xl shadow-md max-w-xl mx-auto mb-10">
+  <h2 className="text-xl font-semibold mb-4 text-blue-600">Generate a Coupon</h2>
+  <p className="text-sm text-gray-600 mb-4">Each coupon gives ₹50 off and is valid for 4 days.</p>
+  <button
+    onClick={handleGenerateCoupon}
+    className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition duration-200"
+  >
+    Generate Coupon
+  </button>
+</div>
+
 
       {/* Coupon Usage */}
       <div className="max-w-4xl mx-auto bg-white p-6 rounded-xl shadow-md">

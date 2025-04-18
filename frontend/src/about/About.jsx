@@ -33,7 +33,7 @@ const About = () => {
             should ever have to abandon their education because of financial constraints.
           </p>
           <p>
-            Fueled by this heartfelt conviction, we launched the <strong>Scholar of the Year (SOY)</strong> program to provide meaningful support
+            Fueled by this heartfelt conviction, we launched the <strong>Scholar of the Year (soty)</strong> program to provide meaningful support
             to underprivileged but exceptionally talented students. This initiative is our way of ensuring that no potential goes unrealized,
             and no dream is left unfulfilled simply because of financial barriers.
           </p>
@@ -56,13 +56,13 @@ const About = () => {
               a roadblock to academic success.
             </p>
             <p>
-              Through the SOY program, we envision not just helping individual students but also inspiring a ripple effect of positive
+              Through the soty program, we envision not just helping individual students but also inspiring a ripple effect of positive
               change within families, communities, and beyond.
             </p>
             <p>
               Inspired by this mission, Muserurals Pvt. Ltd. is not just a name—it's a commitment to empowering communities and creating
               opportunities. Our efforts extend beyond furniture to include our flagship scholarship program,
-              <strong> "Scholar of the Year (SOY)"</strong>, designed to uplift underprivileged yet deserving school students.
+              <strong> "Scholar of the Year (soty)"</strong>, designed to uplift underprivileged yet deserving school students.
             </p>
             <p>
               At Muserurals, we believe that success is measured not by profit, but by the positive impact we leave behind. Join us on

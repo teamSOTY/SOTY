@@ -20,14 +20,16 @@ router.post("/prepare-payment", async (req, res) => {
   try {
     const today = new Date();
 
-    // 1. Check Static Coupon Store First
-    if (coupon && staticCoupons[coupon]) {
-      const staticData = staticCoupons[coupon];
-      if (today <= new Date(staticData.expiry)) {
-        finalAmount -= staticData.discount;
-        return res.json({ success: true, amount: finalAmount, note: "Static coupon used" });
+    // Only process coupon if it's a non-empty string
+    if (coupon && typeof coupon === 'string' && coupon.trim() !== '') {
+      // 1. Check Static Coupon Store First
+      if (coupon && staticCoupons[coupon]) {
+        const staticData = staticCoupons[coupon];
+        if (today <= new Date(staticData.expiry)) {
+          finalAmount -= staticData.discount;
+          return res.json({ success: true, amount: finalAmount, note: "Static coupon used" });
+        }
       }
-    }
 
     // 2. Fallback to DB Coupon
     const found = await Coupon.findOne({ code: coupon });
@@ -55,7 +57,10 @@ router.post("/prepare-payment", async (req, res) => {
     }
 
     return res.status(400).json({ success: false, message: "Invalid or expired coupon" });
-  } catch (err) {
+  }
+  // ✅ If no coupon is provided, return base amount
+  return res.json({ success: true, amount: finalAmount, note: "No coupon used" });
+ } catch (err) {
     console.error("Coupon error:", err);
     res.status(500).json({ success: false, message: "Internal error applying coupon" });
   }
@@ -82,19 +87,25 @@ router.post("/create-order", async (req, res) => {
 
 // ------------------ Verify Razorpay Payment ------------------
 router.post("/verify-payment", (req, res) => {
-  const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+  try {
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
 
-  const sign = razorpay_order_id + "|" + razorpay_payment_id;
-  const expectedSignature = crypto
-    .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
-    .update(sign.toString())
-    .digest("hex");
+    const sign = razorpay_order_id + "|" + razorpay_payment_id;
+    const expectedSignature = crypto
+      .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+      .update(sign.toString())
+      .digest("hex");
 
-  if (expectedSignature === razorpay_signature) {
-    res.status(200).json({ success: true, message: "✅ Payment verified successfully" });
-  } else {
-    res.status(400).json({ success: false, message: "❌ Payment verification failed" });
+    if (expectedSignature === razorpay_signature) {
+      return res.status(200).json({ success: true, message: "✅ Payment verified successfully" });
+    } else {
+      return res.status(400).json({ success: false, message: "❌ Payment verification failed" });
+    }
+  } catch (err) {
+    console.error("❌ Error in payment verification:", err);
+    res.status(500).json({ success: false, message: "Internal server error" });
   }
 });
+
 
 module.exports = router;

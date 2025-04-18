@@ -1,9 +1,10 @@
 const express = require('express');
 const Coupon = require('../models/couponSchema');
 const router = express.Router();
+const authenticateFirebaseUser = require('../middleware/verifyFirebaseToken');
 
 // POST /api/coupon - Create a coupon (with Firebase UID)
-router.post('/', async (req, res) => {
+router.post('/',authenticateFirebaseUser, async (req, res) => {
   try {
     const { code} = req.body;
     const firebaseUID = req.user?.uid;

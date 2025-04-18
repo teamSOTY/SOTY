@@ -15,7 +15,7 @@ const PaymentComponent = () => {
         const res = await fetch("https://soty-backend.onrender.com/api/payment/prepare-payment", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ coupon: "" }),
+          body: JSON.stringify({ coupon: null }),
         });
 
         const data = await res.json();
@@ -37,7 +37,7 @@ const PaymentComponent = () => {
       const res = await fetch("https://soty-backend.onrender.com/api/payment/prepare-payment", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ coupon }),
+        body: JSON.stringify({ coupon:coupon ===''?null:coupon,   studentId: 'your_student_id' }),
       });
 
       const data = await res.json();
