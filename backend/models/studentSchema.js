@@ -20,10 +20,12 @@ const studentSchema = new mongoose.Schema({
   schoolName: { type: String,  },
   firebaseUid: { type: String,  }, // Firebase UID field
   // Optional fields for document uploads (Cloudinary URLs)
-  profilePicture: { type: String },
-  marksheet: { type: String },
+  profilePhoto: { type: String },
+  tenthMarksheet: { type: String },
   signature: { type: String },
   aadharCard: { type: String },
+  isPaymentDone: { type: Boolean, default: false },
+  paymentId: String,
   createdAt: { type: Date, default: Date.now }
 });
 

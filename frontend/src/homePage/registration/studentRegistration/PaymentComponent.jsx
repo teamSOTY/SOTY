@@ -60,6 +60,13 @@ const PaymentComponent = () => {
   const handlePayment = async () => {
     setLoading(true);
     try {
+  // ✅ Check if studentId exists before proceeding
+  const studentId = localStorage.getItem("studentId");
+  if (!studentId) {
+    alert("❌ Student ID is missing. Please log in or refresh the page.");
+    return; // Stop further execution
+  }
+
       // ✅ Re-validate amount on payment (for safety)
       const prepRes = await fetch("https://soty-backend.onrender.com/api/payment/prepare-payment", {
         method: "POST",
@@ -89,16 +96,24 @@ const PaymentComponent = () => {
         description: "Secure Payment",
         order_id: order.id,
         handler: async function (response) {
+          const studentId = localStorage.getItem("studentId");
+
+          if (!studentId) {
+            alert("❌ Student ID is missing. Please refresh page or login again or contact our team.");
+            return;
+          }
+
           const verifyRes = await fetch("https://soty-backend.onrender.com/api/payment/verify-payment", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(response),
+            body: JSON.stringify({...response, studentId}),
           });
 
           const result = await verifyRes.json();
           alert(result.message);
 
           if (result.success) {
+            localStorage.removeItem("studentId");
             navigate("/studentDashboard");
           } else {
             alert("❌ Payment verification failed");

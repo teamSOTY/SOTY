@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import Navbar from '../../components/navbar/Navbar';
 import Footer from '../../components/footer/Footer';
@@ -11,6 +12,8 @@ import { useNavigate } from 'react-router-dom';
 
 const StudentRegister = () => {
   const [nextButtonDisabled, setNextButtonDisabled] = useState(false);
+  const [studentId, setStudentId] = useState(null);
+
 
   const [currentStep, setCurrentStep] = useState(1);
   const [showPhoneOTP, setShowPhoneOTP] = useState(false);
@@ -21,6 +24,10 @@ const StudentRegister = () => {
   const [otpTimer, setOtpTimer] = useState(0);
   const [otpExpiryTimer, setOtpExpiryTimer] = useState(300);
   const [photo, setPhoto] = useState(null); // State for photo upload
+  const [aadhaar, setAadhaar] = useState(null);
+const [signature, setSignature] = useState(null);
+const [tenthMarksheet, setTenthMarksheet] = useState(null);
+
 
   const [phone, setPhone] = useState("");  // Phone number state
   const [classValue, setClassValue] = useState("");
@@ -178,19 +185,29 @@ const StudentRegister = () => {
 
         delete studentData.password;
 
-        if (photo) {
-          const formData = new FormData();
-          formData.append('file', photo);
-          formData.append('upload_preset', 'your_upload_preset');
-
-          const uploadResponse = await axios.post('https://api.cloudinary.com/v1_1/dh7vksh4l/image/upload', formData);
-          studentData.profilePicture = uploadResponse.data.secure_url;
-        }
-
         const response = await axios.post("https://soty-backend.onrender.com/api/students", studentData);
 
         if (response.data.success) {
+          const studentId = response.data.data._id; // ✅ Get _id from nested data
+             setStudentId(studentId); 
+// saving to localsetter for using everywhere
+             localStorage.setItem("studentId", studentId);
           console.log("User  registered and saved successfully.");
+
+
+
+    //       if (photo) {
+    //         const formData = new FormData();
+    //         formData.append('file', photo);
+    //         formData.append('upload_preset', 'your_upload_preset');
+  
+    //         const uploadResponse = await axios.post('https://soty-backend.onrender.com/api/cloudinaryUpload', formData);
+    //           // ✅ Log the Cloudinary response here
+    // console.log("Upload response:", uploadResponse.data);
+    //         studentData.profilePicture = uploadResponse.data.secure_url;
+    //       }
+  
+
           setCurrentStep(4);
         } else {
           console.error("Server Error:", response.data.message);
@@ -202,6 +219,41 @@ const StudentRegister = () => {
       }
     }
   };
+
+//doument sending to cloudinary
+const handleSubmitDocuments = async () => {
+  try {
+    if (!studentId) {
+      alert("Student ID not found. Please register first.");
+      return;
+    }
+
+
+    const uploads = {};
+
+    const uploadToCloudinary = async (file) => {
+      const formData = new FormData();
+      formData.append('file', file);
+      // formData.append('upload_preset', 'your_upload_preset');
+      const res = await axios.post('https://soty-backend.onrender.com/api/cloudinaryUpload', formData);
+      return res.data.secure_url;
+    };
+
+    if (photo) uploads.profilePhoto = await uploadToCloudinary(photo);
+    if (aadhaar) uploads.aadharCard = await uploadToCloudinary(aadhaar);
+    if (tenthMarksheet) uploads.tenthMarksheet = await uploadToCloudinary(tenthMarksheet);
+    if (signature) uploads.signature = await uploadToCloudinary(signature);
+
+    await axios.put(`https://soty-backend.onrender.com/api/students/${studentId}/documents`, uploads);
+
+    console.log("Documents uploaded ✅");
+    navigate("/payment");
+  } catch (err) {
+    console.error("Upload error:", err);
+    alert("Failed to upload documents.");
+  }
+};
+
 
   const handlePrevious = () => {
     if (currentStep > 1) setCurrentStep(currentStep - 1);
@@ -490,15 +542,15 @@ const StudentRegister = () => {
           />
 
           <label className="block mb-2">9th class marksheet 9वीं कक्षा की मार्कशीट</label>
-          <input type="file" className="block w-full border border-gray-300 rounded-md p-2" />
+          <input type="file" onChange={(e) => setTenthMarksheet(e.target.files[0])}  className="block w-full border border-gray-300 rounded-md p-2" />
         </div>
 
         <div>
           <label className="block mb-2">Signature हस्ताक्षर</label>
-          <input type="file" className="mb-4 block w-full border border-gray-300 rounded-md p-2" />
+          <input type="file" onChange={(e) => setSignature(e.target.files[0])} className="mb-4 block w-full border border-gray-300 rounded-md p-2" />
 
           <label className="block mb-2">Aadhar Card आधार कार्ड</label>
-          <input type="file" className="block w-full border border-gray-300 rounded-md p-2" />
+          <input type="file" onChange={(e) => setAadhaar(e.target.files[0])} className="block w-full border border-gray-300 rounded-md p-2" />
         </div>
       </div>
 
@@ -510,7 +562,7 @@ const StudentRegister = () => {
           Previous
         </button>
         <button
-          onClick={() => navigate('/payment')}
+          onClick={handleSubmitDocuments}
           className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 px-6 rounded-md w-full"
         >
           Submit Documents

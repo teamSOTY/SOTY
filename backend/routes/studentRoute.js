@@ -29,6 +29,32 @@ router.post('/', async (req, res) => {
   }
 });
 
+// PUT: Update student documents
+router.put('/:id/documents', async (req, res) => {
+  try {
+    const updatedStudent = await Student.findByIdAndUpdate(
+      req.params.id,
+      {
+        $set: {
+          profilePhoto: req.body.profilePhoto,
+          aadharCard: req.body.aadharCard,
+          tenthMarksheet: req.body.tenthMarksheet,
+          signature: req.body.signature,
+         
+        }
+      },
+      { new: true }
+    );
+
+    res.json({ success: true, data: updatedStudent });
+  } catch (error) {
+    console.error('Error updating documents:', error);
+    res.status(500).json({ success: false, message: 'Failed to update documents' });
+  }
+});
+
+
+
 // GET /api/student
 router.get("/login", verifyFirebaseToken, async (req, res) => {
   try {

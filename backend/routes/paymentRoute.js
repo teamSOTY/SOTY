@@ -86,9 +86,9 @@ router.post("/create-order", async (req, res) => {
 });
 
 // ------------------ Verify Razorpay Payment ------------------
-router.post("/verify-payment", (req, res) => {
+router.post("/verify-payment",async (req, res) => {
   try {
-    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature, studentId } = req.body;
 
     const sign = razorpay_order_id + "|" + razorpay_payment_id;
     const expectedSignature = crypto
@@ -97,6 +97,14 @@ router.post("/verify-payment", (req, res) => {
       .digest("hex");
 
     if (expectedSignature === razorpay_signature) {
+      if (studentId) {
+        await Student.findByIdAndUpdate(studentId, {
+          $set: {
+            isPaymentDone: true,
+            paymentId: razorpay_payment_id,
+          },
+        });
+      }
       return res.status(200).json({ success: true, message: "✅ Payment verified successfully" });
     } else {
       return res.status(400).json({ success: false, message: "❌ Payment verification failed" });

@@ -1,5 +1,5 @@
-// backend route (e.g., routes/upload.js)
-const router = require('express').Router();
+const express = require('express');
+const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
 
 // Configure Cloudinary
@@ -9,16 +9,26 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-router.post('/cloudinaryUpload', async (req, res) => {
+// Set up multer to store files temporarily
+const upload = multer({ dest: 'uploads/' });
+
+const router = express.Router();
+
+// Route to handle file upload
+router.post('/', upload.single('file'), async (req, res) => {
   try {
-    const file = req.files.file;
-    
-    const result = await cloudinary.uploader.upload(file.tempFilePath, {
-      upload_preset: process.env.CLOUDINARY_UPLOAD_PRESET
+    // Check if file exists in the request
+    if (!req.file) {
+      return res.status(400).json({ error: 'No file uploaded' });
+    }
+
+    // Upload to Cloudinary
+    const result = await cloudinary.uploader.upload(req.file.path, {
+      upload_preset: process.env.CLOUDINARY_UPLOAD_PRESET,
     });
 
     res.json({
-      secure_url: result.secure_url
+      secure_url: result.secure_url,
     });
   } catch (error) {
     console.error('Upload error:', error);
