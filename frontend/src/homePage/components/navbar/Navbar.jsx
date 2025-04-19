@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import LogoSoty from '../../../assets/logoSoty.png';
+import FullLogo from '../../../assets/heroImage.png'
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -28,7 +29,7 @@ const Navbar = () => {
           {/* Logo - replaced text with image */}
           <div className="font-bold text-teal-600 flex items-center">
             <Link to="/">
-              <img src={LogoSoty} alt="SOTY Logo" className="h-8" />
+              <img src={FullLogo} alt="SOTY Logo" className="h-8" />
             </Link>
           </div>
 
