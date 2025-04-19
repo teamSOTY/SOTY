@@ -72,7 +72,7 @@ setTimeout(() => setNextButtonDisabled(false), 15000);
     };
 
     // Send data to your backend
-    const response = await fetch("https://soty-backend.onrender.com/api/institute", {
+    const response = await fetch("http://localhost:5001/api/institute", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
