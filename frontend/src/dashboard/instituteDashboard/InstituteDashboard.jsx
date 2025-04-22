@@ -44,18 +44,6 @@ const InstituteDashboard = () => {
     navigate('/'); // Redirect to homepage
   };
 
-  // const handleChange = (e) => {
-  //   const { name, value } = e.target;
-    
-  //   // If the field is 'code', make it uppercase and remove spaces and special characters
-  //   let updatedValue = value;
-  //   if (name === 'code') {
-  //     updatedValue = updatedValue.toUpperCase().replace(/\s+/g, '').replace(/[^A-Z0-9]/g, '');
-  //   }
-  
-  //   setForm({ ...form, [name]: updatedValue });
-  // };
-
   const generateRandomCode = () => {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     let code = '';
@@ -94,8 +82,6 @@ const InstituteDashboard = () => {
       alert('Error creating coupon');
     }
   };
-  
-
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
@@ -109,19 +95,43 @@ const InstituteDashboard = () => {
         </button>
       </div>
 
-      {/* Coupon Creation */}
-      {/* Coupon Creation */}
-<div className="bg-white p-6 rounded-xl shadow-md max-w-xl mx-auto mb-10">
-  <h2 className="text-xl font-semibold mb-4 text-blue-600">Generate a Coupon</h2>
-  <p className="text-sm text-gray-600 mb-4">Each coupon gives ₹50 off and is valid for 4 days.</p>
-  <button
-    onClick={handleGenerateCoupon}
-    className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition duration-200"
-  >
-    Generate Coupon
-  </button>
-</div>
+      {/* Institutional Rewards Section */}
+      <div className="bg-white p-6 rounded-xl shadow-md max-w-4xl mx-auto mb-10">
+        <h2 className="text-xl font-semibold mb-4 text-blue-600">
+          🏆 Institutional Rewards for Top-Performing Students
+        </h2>
+        <p className="text-sm text-gray-700 mb-4">
+          We recognize the role of educational institutions in nurturing bright minds, and we want to reward their efforts!
+          Institutions whose students achieve top ranks in our <strong>Scholarship Exam for 10th Class Students</strong> will
+          receive special cash rewards for marketing and development.
+        </p>
+        
+        <div className="bg-blue-50 p-4 rounded-lg">
+          <h3 className="font-medium text-blue-800 mb-2">Rewards for Institutions</h3>
+          <ul className="space-y-2 pl-5 list-disc text-gray-700">
+            <li><strong>1st Rank:</strong> The institution of the 1st ranker will receive <strong>₹30,000</strong> for marketing purposes.</li>
+            <li><strong>2nd Rank:</strong> The institution of the 2nd ranker will receive <strong>₹20,000</strong> for marketing.</li>
+            <li><strong>3rd Rank:</strong> The institution of the 3rd ranker will receive <strong>₹15,000</strong> for marketing.</li>
+          </ul>
+        </div>
+        
+        <p className="text-sm text-gray-600 mt-4">
+          This initiative is aimed at recognizing the efforts of schools and coaching centres in fostering academic excellence.
+          By supporting institutions, we hope to encourage more students to excel and take advantage of this scholarship opportunity.
+        </p>
+      </div>
 
+      {/* Coupon Creation */}
+      <div className="bg-white p-6 rounded-xl shadow-md max-w-xl mx-auto mb-10">
+        <h2 className="text-xl font-semibold mb-4 text-blue-600">Generate a Coupon</h2>
+        <p className="text-sm text-gray-600 mb-4">Each coupon gives ₹50 off and is valid for 4 days.</p>
+        <button
+          onClick={handleGenerateCoupon}
+          className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition duration-200"
+        >
+          Generate Coupon
+        </button>
+      </div>
 
       {/* Coupon Usage */}
       <div className="max-w-4xl mx-auto bg-white p-6 rounded-xl shadow-md">
@@ -145,9 +155,8 @@ const InstituteDashboard = () => {
                     Used by {coupon.usedBy?.length || 0}/15 students
                   </span>
                   {coupon.usedBy.length >= 15 && (
-        <p className="text-sm text-red-500 font-medium mt-1">⚠️ Usage limit reached</p>
-      )}
-
+                    <p className="text-sm text-red-500 font-medium mt-1">⚠️ Usage limit reached</p>
+                  )}
                 </div>
 
                 {coupon.usedBy && coupon.usedBy.length > 0 ? (
