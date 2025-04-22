@@ -232,14 +232,14 @@ const Navbar = () => {
               {/* Dropdown - Mobile (Login) */}
               <div className={`pl-4 space-y-2 overflow-hidden transition-all duration-200 ${isLoginDropdownOpen ? 'max-h-20 py-2' : 'max-h-0'}`}>
                 <NavLink
-                  to="/login/institute"
+                  to="/instituteLogin"
                   className="block text-gray-700 hover:text-emerald-500"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Institute Login
                 </NavLink>
                 <NavLink
-                  to="/login/student"
+                  to="/studentLogin"
                   className="block text-gray-700 hover:text-emerald-500"
                   onClick={() => setIsMenuOpen(false)}
                 >

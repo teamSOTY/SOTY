@@ -149,7 +149,7 @@ const StudentRegister = () => {
         return alert("Please fill out all required personal details before submitting!");
       }
       setNextButtonDisabled(true);
-      setTimeout(() => setNextButtonDisabled(false), 15000);
+      // setTimeout(() => setNextButtonDisabled(false), 15000);
       const personalData = {
         firstName,
         lastName,
@@ -197,6 +197,9 @@ const StudentRegister = () => {
       } catch (error) {
         console.error("Firebase Auth Error:", error.message);
         alert("Error creating user: " + error.message);
+      }
+      finally {
+        setNextButtonDisabled(false); // Re-enable the button after async finishes
       }
     }
   };
