@@ -37,7 +37,7 @@ const PaymentComponent = () => {
       const res = await fetch("https://soty-backend.onrender.com/api/payment/prepare-payment", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ coupon:coupon ===''?null:coupon,   studentId: 'your_student_id' }),
+        body: JSON.stringify({ coupon:coupon ===''?null:coupon, studentId:localStorage.getItem("studentId") }),
       });
 
       const data = await res.json();
@@ -46,12 +46,13 @@ const PaymentComponent = () => {
         setFinalAmount(data.amount);
         setCouponStatus("✅ Coupon applied successfully!");
       } else {
-        setCouponStatus("❌ Invalid coupon.");
-        setFinalAmount(500); // fallback
+        
+        setFinalAmount(199); // fallback
+        
       }
     } catch (err) {
       setCouponStatus("❌ Something went wrong.");
-      setFinalAmount(500);
+      setFinalAmount(199);
     } finally {
       setLoading(false);
     }

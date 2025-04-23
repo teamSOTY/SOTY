@@ -93,10 +93,13 @@ const Faq = () => {
               {openIndex === index ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
             </button>
             {openIndex === index && (
-              <div className="px-4 pb-4 text-sm text-gray-200">
-                {faq.answer}
-              </div>
-            )}
+  <div className="px-4 pb-4 text-sm text-gray-200">
+    {faq.answer.split('\n').map((line, i) => (
+      <p key={i} className="mb-2">{line}</p>
+    ))}
+  </div>
+)}
+
           </div>
         ))}
       </div>
