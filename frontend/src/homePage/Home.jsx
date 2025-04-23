@@ -65,7 +65,8 @@ const Home = () => {
           }}
         >
           {/* Dark Overlay - Adjusted opacity for better image visibility */}
-          <div className="absolute inset-0 bg-gradient-to-b from-emerald-900/70 to-emerald-700/80"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-emerald-900/70 to-black"></div>
+
 
           {/* Content - Added responsive padding and width */}
           <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-16 ">
@@ -452,22 +453,24 @@ const Home = () => {
   </div>
 </section>
 
-        <section className="bg-gray-50 py-16 px-4 sm:px-6 lg:px-8">
+
+  {/* the below is meet our team section */}
+        {/* <section className="bg-gray-50 py-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        {/* Section Header with green line and title */}
+       
         <div className="flex items-center  justify-center mb-8">
           <div className="h-1 w-12 bg-green-400 mr-4"></div>
           <h2 className="text-4xl font-bold">Our <span className="font-extrabold">Team</span></h2>
         </div>
         
-        {/* Subtitle */}
+   
         <div className="mb-12 text-center">
           <p className="text-xl text-gray-500">Expert Team</p>
         </div>
         
-        {/* Team members grid */}
+      
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 ">
-          {/* First team member */}
+         
           <div className=" flex justify-center">
             <img 
               src={HeroImage} 
@@ -476,7 +479,7 @@ const Home = () => {
             />
           </div>
           
-          {/* Second team member */}
+         
           <div className=" flex justify-center">
             <img 
               src={HeroImage} 
@@ -484,7 +487,7 @@ const Home = () => {
               className="w-60 rounded-lg h-auto object-cover"
             />
           </div>
-            {/* Second team member */}
+          
             <div className=" flex justify-center">
             <img 
               src={HeroImage} 
@@ -493,10 +496,10 @@ const Home = () => {
             />
           </div>
           
-          {/* You can add more team members here */}
+        
         </div>
       </div>
-    </section>
+    </section> */}
 
       </div>
 
