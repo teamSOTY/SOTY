@@ -37,7 +37,11 @@ const StudentLogin = () => {
         // You can now store this data or route the user
         navigate('/studentDashboard'); // Update to your actual route
       } else {
-        setLoginError("Student data not found");
+        if (data.message === "Payment not completed") {
+          navigate('/payment'); // 🔁 navigate to payment page
+        } else {
+          setLoginError("Student data not found");
+        }
         setIsProcessing(false);
       }
     } catch (error) {

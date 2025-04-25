@@ -65,6 +65,13 @@ router.get("/login", verifyFirebaseToken, async (req, res) => {
     if (!student) {
       return res.status(404).json({ success: false, message: "Student not found" });
     }
+    
+    if (!student.isPaymentDone) {
+      return res.status(403).json({
+        success: false,
+        message: "Payment not completed",
+      });
+    }
 
     res.json({ success: true, student });
   } catch (err) {

@@ -12,6 +12,8 @@ import StudentDashboard from './dashboard/studentDashboard/StudentDashboard';
 import InstituteDashboard from './dashboard/instituteDashboard/InstituteDashboard';
 import StudentLogin from './homePage/login/studenLogin/StudentLogin';
 import InstituteLogin from './homePage/login/instituteLogin/InstituteLogin';
+import Terms from './termsandpolicy/Terms';
+import Privacy from './termsandpolicy/Privacy';
 
 const App = () => {
   return (
@@ -36,6 +38,9 @@ const App = () => {
       <Route path="/payment" element={<PaymentComponent />} />
       <Route path="/studentDashboard" element={<StudentDashboard />} />
 
+      {/* terms and privacy policy */}
+      <Route path='/terms-conditions' element={<Terms></Terms>}/>
+      <Route path='/privacy-policy' element={<Privacy></Privacy>}/>
 
 
       <Route path="/instituteDashboard" element={<InstituteDashboard />} />
