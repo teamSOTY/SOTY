@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 const PaymentComponent = () => {
   const navigate = useNavigate();
   const [coupon, setCoupon] = useState("");
-  const [finalAmount, setFinalAmount] = useState(0);
+  const [finalAmount, setFinalAmount] = useState(199);
   const [loading, setLoading] = useState(false);
   const [couponStatus, setCouponStatus] = useState("");
 
@@ -19,11 +19,15 @@ const PaymentComponent = () => {
         });
 
         const data = await res.json();
-        if (data.success) {
+        if (data.success && data.amount) {
           setFinalAmount(data.amount);
+        }else {
+          // Ensure we have a default amount if API doesn't return one
+          setFinalAmount(199);
         }
       } catch (err) {
         console.error("❌ Error fetching initial amount:", err);
+        setFinalAmount(199);
       }
     };
 
@@ -32,25 +36,33 @@ const PaymentComponent = () => {
 
   // ✅ Apply coupon by calling the same endpoint
   const applyCoupon = async () => {
+    if (coupon.trim() === "") {
+      setCouponStatus("❌ Please enter a coupon code first.");
+      return;
+    }
     setLoading(true);
     try {
       const res = await fetch("https://soty-backend.onrender.com/api/payment/prepare-payment", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ coupon:coupon ===''?null:coupon, studentId:localStorage.getItem("studentId") }),
+        body: JSON.stringify({
+          coupon: coupon === "" ? null : coupon,
+          studentId: localStorage.getItem("studentId"),
+        }),
       });
 
       const data = await res.json();
 
-      if (data.success) {
+      if (data.success  && data.amount) {
         setFinalAmount(data.amount);
         setCouponStatus("✅ Coupon applied successfully!");
       } else {
-        
+        setCouponStatus(`❌ ${data.message || "Invalid or expired coupon."}`);
         setFinalAmount(199); // fallback
         
       }
     } catch (err) {
+      console.error("Coupon error:", err);
       setCouponStatus("❌ Something went wrong.");
       setFinalAmount(199);
     } finally {
@@ -59,6 +71,7 @@ const PaymentComponent = () => {
   };
 
   const handlePayment = async () => {
+    const paymentAmount = finalAmount || 199;
     setLoading(true);
     try {
   // ✅ Check if studentId exists before proceeding
@@ -77,13 +90,18 @@ const PaymentComponent = () => {
 
       const prepData = await prepRes.json();
       const amount = prepData.amount;
+          // Ensure the amount is valid
+    if (amount <= 0) {
+      alert("❌ Invalid amount received from server. Please try again.");
+      return;
+    }
       setFinalAmount(amount);
 
       // ✅ Create Razorpay Order
       const res = await fetch("https://soty-backend.onrender.com/api/payment/create-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ amount, currency: "INR" }),
+        body: JSON.stringify({ amount:paymentAmount, currency: "INR" }),
       });
 
       const order = await res.json();
@@ -136,6 +154,8 @@ const PaymentComponent = () => {
       setLoading(false);
     }
   };
+    // Always show a fallback amount if finalAmount is somehow undefined
+    const displayAmount = finalAmount || 199;
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
@@ -144,7 +164,7 @@ const PaymentComponent = () => {
 
         <div className="mb-4">
           <p className="text-lg text-gray-700 font-medium">Amount to Pay:</p>
-          <p className="text-3xl font-bold text-emerald-600">₹{finalAmount}</p>
+          <p className="text-3xl font-bold text-emerald-600">₹{displayAmount}</p>
         </div>
 
         <div className="my-6">
@@ -185,7 +205,7 @@ const PaymentComponent = () => {
             loading ? "opacity-50 cursor-not-allowed" : ""
           }`}
         >
-          {loading ? "Processing..." : `Pay Now ₹${finalAmount}`}
+          {loading ? "Processing..." : `Pay Now ₹${displayAmount}`}
         </button>
       </div>
     </div>
