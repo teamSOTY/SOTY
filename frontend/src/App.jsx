@@ -18,6 +18,7 @@ import Privacy from './termsandpolicy/Privacy';
 const App = () => {
   return (
   <>
+  <div className='overflow-x-hidden'>
   <ScrollToTop/>
     <Routes>
       {/* Public Routes */}
@@ -46,6 +47,7 @@ const App = () => {
       <Route path="/instituteDashboard" element={<InstituteDashboard />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
+    </div>
   </>
   );
 };

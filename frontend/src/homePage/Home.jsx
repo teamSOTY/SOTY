@@ -400,7 +400,7 @@ const Home = () => {
   {/* Texture overlay */}
   <div className="absolute inset-0 bg-white bg-opacity-5 pointer-events-none"
        style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px)',
-                backgroundSize: '20px 20px' }}>
+               backgroundSize: '20px 20px' }}>
   </div>
   
   <div className="max-w-7xl mx-auto">
@@ -412,36 +412,105 @@ const Home = () => {
       </div>
     </div>
     
-    {/* Testimonials horizontal scroll */}
-    <div className="flex overflow-x-auto pb-6 snap-x snap-mandatory scrollbar-hide">
-      {testimonials.map((testimonial, index) => (
-        <div 
-          key={testimonial.id} 
-          className="bg-white p-8 rounded-lg shadow-lg relative flex-none w-full sm:w-1/2 lg:w-1/3 snap-start mr-6"
-          style={{ minWidth: '300px' }}
-        >
-          {/* Testimonial text */}
-          <p className="text-gray-600 mb-8">
-            {testimonial.text}
-          </p>
-          
-          {/* Author info */}
-          <div>
-            <h4 className="font-bold text-gray-900">{testimonial.author.replace(/^[-–]\s*/, '')}</h4>
-            <p className="text-gray-500">Delhi</p>
+    {/* Testimonials container with scroll controls */}
+    <div className="relative">
+      {/* Left scroll button */}
+      <button 
+        className="absolute -left-6 top-1/2 -translate-y-1/2 bg-white bg-opacity-80 rounded-full p-2 shadow-lg z-10 hover:bg-opacity-100 transition-all"
+        onClick={() => {
+          const container = document.getElementById('testimonial-container');
+          if (container) {
+            container.scrollBy({ left: -300, behavior: 'smooth' });
+          }
+        }}
+      >
+        <svg className="w-6 h-6 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+        </svg>
+      </button>
+
+      {/* Right scroll button */}
+      <button 
+        className="absolute -right-6 top-1/2 -translate-y-1/2 bg-white bg-opacity-80 rounded-full p-2 shadow-lg z-10 hover:bg-opacity-100 transition-all"
+        onClick={() => {
+          const container = document.getElementById('testimonial-container');
+          if (container) {
+            container.scrollBy({ left: 300, behavior: 'smooth' });
+          }
+        }}
+      >
+        <svg className="w-6 h-6 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+
+      {/* Testimonials horizontal scroll */}
+      <div 
+        id="testimonial-container"
+        className="flex overflow-x-auto pb-6 snap-x snap-mandatory scrollbar-hide scroll-smooth"
+        style={{
+          scrollbarWidth: 'none',  /* Firefox */
+          msOverflowStyle: 'none'  /* IE and Edge */
+        }}
+        onWheel={(e) => {
+          // Convert vertical wheel scrolling to horizontal
+          if (e.deltaY !== 0) {
+            e.preventDefault();
+            e.currentTarget.scrollBy({
+              left: e.deltaY > 0 ? 100 : -100,
+            });
+          }
+        }}
+      >
+        {testimonials && testimonials.map((testimonial, index) => (
+          <div
+            key={testimonial.id || index}
+            className="bg-white p-8 rounded-lg shadow-lg relative flex-none w-full sm:w-1/2 lg:w-1/3 snap-start mr-6"
+            style={{ minWidth: '300px' }}
+          >
+            {/* Testimonial text */}
+            <p className="text-gray-600 mb-8">
+              {testimonial.text}
+            </p>
+            
+            {/* Author info */}
+            <div>
+              <h4 className="font-bold text-gray-900">{testimonial.author?.replace(/^[-–]\s*/, '') || 'Anonymous'}</h4>
+              <p className="text-gray-500">Delhi</p>
+            </div>
+            
+            {/* Large quote mark */}
+            <div className="absolute bottom-8 right-8 text-gray-200 opacity-50">
+              <svg className="w-24 h-24" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+              </svg>
+            </div>
           </div>
-          
-          {/* Large quote mark */}
-          <div className="absolute bottom-8 right-8 text-gray-200 opacity-50">
-            <svg className="w-24 h-24" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
-            </svg>
-          </div>
-        </div>
+        ))}
+      </div>
+    </div>
+
+    {/* Optional: Pagination dots */}
+    <div className="flex justify-center mt-6">
+      {testimonials && [...Array(Math.min(5, testimonials.length))].map((_, i) => (
+        <button 
+          key={i}
+          className="h-2 w-2 rounded-full bg-white mx-1 hover:bg-green-200 focus:outline-none"
+          onClick={() => {
+            const container = document.getElementById('testimonial-container');
+            if (container) {
+              const scrollPosition = i * container.offsetWidth;
+              container.scrollTo({ left: scrollPosition, behavior: 'smooth' });
+            }
+          }}
+        />
       ))}
     </div>
   </div>
 </section>
+
+
+
 
 
   {/* the below is meet our team section */}

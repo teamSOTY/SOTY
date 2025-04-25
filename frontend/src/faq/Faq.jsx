@@ -72,12 +72,16 @@ const Faq = () => {
   return (
     <>
     <Navbar></Navbar>
+       <section className="bg-cover bg-center h-64 flex items-center justify-center text-white text-4xl font-bold shadow-md"
+            style={{ backgroundImage: `url(${faqImg})` }}>
+          
+          </section>
     <section className="bg-[#f5f6fc] py-10 px-4">
       <div className="max-w-3xl mx-auto">
-      <div
-  className="bg-center bg-no-repeat bg-cover h-44  mb-6 rounded-md"
+      {/* <div
+  className="bg-center bg-no-repeat bg-cover h-64  mb-6 rounded-md"
   style={{ backgroundImage: `url(${faqImg})` }}
-/>
+/> */}
 
 
         {faqs.map((faq, index) => (
