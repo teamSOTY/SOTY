@@ -136,7 +136,7 @@ const StudentRegister = () => {
         lastClassPercentage,
         schoolName,
       };
-      console.log('Institute data:', instituteData);
+      // console.log('Institute data:', instituteData);
       setCurrentStep(3);
     } else if (currentStep === 3) {
       // Validation for required personal fields
@@ -188,7 +188,7 @@ const StudentRegister = () => {
           const studentId = response.data.data._id;
           setStudentId(studentId);
           localStorage.setItem("studentId", studentId);
-          console.log("User registered and saved successfully.");
+          // console.log("User registered and saved successfully.");
           setCurrentStep(4);
         } else {
           console.error("Server Error:", response.data.message);
@@ -228,7 +228,7 @@ const StudentRegister = () => {
 
       await axios.put(`https://soty-backend.onrender.com/api/students/${studentId}/documents`, uploads);
 
-      console.log("Documents uploaded ✅");
+      // console.log("Documents uploaded ✅");
       navigate("/payment");
     } catch (err) {
       console.error("Upload error:", err);
