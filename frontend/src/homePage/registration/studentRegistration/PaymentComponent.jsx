@@ -12,7 +12,7 @@ const PaymentComponent = () => {
   useEffect(() => {
     const fetchInitialAmount = async () => {
       try {
-        const res = await fetch("https://soty-backend.onrender.com/api/payment/prepare-payment", {
+        const res = await fetch("https://soty-backend-n1b1.onrender.com/api/payment/prepare-payment", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ coupon: null }),
@@ -42,7 +42,7 @@ const PaymentComponent = () => {
     }
     setLoading(true);
     try {
-      const res = await fetch("https://soty-backend.onrender.com/api/payment/prepare-payment", {
+      const res = await fetch("https://soty-backend-n1b1.onrender.com/api/payment/prepare-payment", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -82,7 +82,7 @@ const PaymentComponent = () => {
   }
 
       // ✅ Re-validate amount on payment (for safety)
-      const prepRes = await fetch("https://soty-backend.onrender.com/api/payment/prepare-payment", {
+      const prepRes = await fetch("https://soty-backend-n1b1.onrender.com/api/payment/prepare-payment", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ coupon }),
@@ -98,7 +98,7 @@ const PaymentComponent = () => {
       setFinalAmount(amount);
 
       // ✅ Create Razorpay Order
-      const res = await fetch("https://soty-backend.onrender.com/api/payment/create-order", {
+      const res = await fetch("https://soty-backend-n1b1.onrender.com/api/payment/create-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ amount:paymentAmount, currency: "INR" }),
@@ -122,7 +122,7 @@ const PaymentComponent = () => {
             return;
           }
 
-          const verifyRes = await fetch("https://soty-backend.onrender.com/api/payment/verify-payment", {
+          const verifyRes = await fetch("https://soty-backend-n1b1.onrender.com/api/payment/verify-payment", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({...response, studentId}),

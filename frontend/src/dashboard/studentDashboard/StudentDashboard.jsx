@@ -16,7 +16,7 @@ const StudentDashboard = () => {
         try {
           const token = await user.getIdToken();
 
-          const res = await fetch("https://soty-backend.onrender.com/api/students/login", {
+          const res = await fetch("https://soty-backend-n1b1.onrender.com/api/students/login", {
             method: "GET",
             headers: {
               "Content-Type": "application/json",

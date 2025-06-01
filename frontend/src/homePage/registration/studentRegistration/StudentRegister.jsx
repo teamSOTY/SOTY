@@ -182,7 +182,7 @@ const StudentRegister = () => {
 
         delete studentData.password;
 
-        const response = await axios.post("https://soty-backend.onrender.com/api/students", studentData);
+        const response = await axios.post("https://soty-backend-n1b1.onrender.com/api/students", studentData);
 
         if (response.data.success) {
           const studentId = response.data.data._id;
@@ -217,7 +217,7 @@ const StudentRegister = () => {
       const uploadToCloudinary = async (file) => {
         const formData = new FormData();
         formData.append('file', file);
-        const res = await axios.post('https://soty-backend.onrender.com/api/cloudinaryUpload', formData);
+        const res = await axios.post('https://soty-backend-n1b1.onrender.com/api/cloudinaryUpload', formData);
         return res.data.secure_url;
       };
 
@@ -226,7 +226,7 @@ const StudentRegister = () => {
       if (tenthMarksheet) uploads.tenthMarksheet = await uploadToCloudinary(tenthMarksheet);
       if (signature) uploads.signature = await uploadToCloudinary(signature);
 
-      await axios.put(`https://soty-backend.onrender.com/api/students/${studentId}/documents`, uploads);
+      await axios.put(`https://soty-backend-n1b1.onrender.com/api/students/${studentId}/documents`, uploads);
 
       // console.log("Documents uploaded ✅");
       navigate("/payment");

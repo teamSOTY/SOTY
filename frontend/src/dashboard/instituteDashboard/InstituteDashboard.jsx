@@ -26,7 +26,7 @@ const InstituteDashboard = () => {
   const fetchCouponUsage = async (user) => {
     try {
       const token = user && (await user.getIdToken());
-      const res = await fetch('https://soty-backend.onrender.com/api/tracking', {
+      const res = await fetch('https://soty-backend-n1b1.onrender.com/api/tracking', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -61,7 +61,7 @@ const InstituteDashboard = () => {
       const user = auth.currentUser;
       const token = user && (await user.getIdToken());
   
-      const res = await fetch('https://soty-backend.onrender.com/api/coupon', {
+      const res = await fetch('https://soty-backend-n1b1.onrender.com/api/coupon', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
